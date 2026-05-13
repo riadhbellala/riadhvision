@@ -1,11 +1,11 @@
 
 import ProjectCard from '../components/ProjectCard';
 
-import athleteImg from '../assets/athlete.png';
-import domaineImg from '../assets/dompaine.png';
-import lyceumImg from '../assets/lyceum.png';
-import smartserviceImg from '../assets/smartservicedz.png';
-import triageflowImg from '../assets/triageflow.png';
+import athleteImg from '../assets/athlete.webp';
+import domaineImg from '../assets/dompaine.webp';
+import lyceumImg from '../assets/lyceum.webp';
+import smartserviceImg from '../assets/smartservicedz.webp';
+import triageflowImg from '../assets/triageflow.webp';
 
 const projects = [
   {

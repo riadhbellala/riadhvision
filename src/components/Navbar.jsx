@@ -1,16 +1,37 @@
-import  { useState  } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: 'home' },
+  { name: 'Projects', href: 'projects' },
+  { name: 'Services', href: 'services' },
+  { name: 'Contact', href: 'contact' },
 ];
+
+const scrollToSection = (id) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
 
 const Navbar = () => {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const ids = navLinks.map(l => l.href);
+    const observers = ids.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const observer = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.3 }
+      );
+      observer.observe(el);
+      return observer;
+    });
+    return () => observers.forEach(o => o?.disconnect());
+  }, []);
 
   return (
     <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 w-full pointer-events-none">
@@ -18,7 +39,7 @@ const Navbar = () => {
         
         {/* Logo - Left */}
         <div className="flex-1 flex justify-start">
-          <a href="#" className="relative flex items-center group py-1">
+          <button onClick={() => scrollToSection('home')} className="relative flex items-center group py-1">
             <div className="font-syne text-xl md:text-2xl font-bold text-white relative z-10 flex items-center tracking-wider">
               {/* R -> RIADH */}
               <div className="flex items-center">
@@ -35,29 +56,36 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
-          </a>
+          </button>
         </div>
 
         {/* Desktop Nav Links - Center */}
         <div className="hidden md:flex flex-none justify-center items-center space-x-8">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.name}
-              href={link.href}
-              className="text-white/70 hover:text-white text-sm font-medium transition-colors duration-300 relative group"
+              onClick={() => scrollToSection(link.href)}
+              className={`text-sm font-medium transition-colors duration-300 relative group ${
+                activeSection === link.href ? 'text-white' : 'text-white/50 hover:text-white'
+              }`}
             >
               {link.name}
-              <span className="absolute -bottom-1.5 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
-            </a>
+              <span className={`absolute -bottom-1.5 left-0 h-[1px] bg-white transition-all duration-300 ${
+                activeSection === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+              }`} />
+            </button>
           ))}
         </div>
 
         {/* Action Button & Mobile Toggle - Right */}
         <div className="flex-1 flex justify-end items-center gap-4">
-          <a href="#contact" className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-white text-black rounded-full hover:bg-neutral-200 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] group">
+          <button
+            onClick={() => scrollToSection('contact')}
+            className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-white text-black rounded-full hover:bg-neutral-200 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] group"
+          >
             Let's Talk
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-          </a>
+          </button>
           
           <button
             className="md:hidden p-2 text-white/70 hover:text-white relative z-50"
@@ -84,24 +112,24 @@ const Navbar = () => {
           >
             <div className="px-6 py-6 space-y-4">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuIsOpen(false)}
-                  className="block text-white/70 hover:text-white text-base font-medium transition-colors"
+                  onClick={() => { scrollToSection(link.href); setMobileMenuIsOpen(false); }}
+                  className={`block w-full text-left text-base font-medium transition-colors ${
+                    activeSection === link.href ? 'text-white' : 'text-white/60'
+                  }`}
                 >
                   {link.name}
-                </a>
+                </button>
               ))}
               <div className="pt-4 mt-2 border-t border-white/10">
-                <a 
-                  href="#contact"
-                  onClick={() => setMobileMenuIsOpen(false)}
+                <button
+                  onClick={() => { scrollToSection('contact'); setMobileMenuIsOpen(false); }}
                   className="w-full flex justify-center items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-black rounded-full hover:bg-neutral-200 transition-colors"
                 >
-                  Contact Me
+                  Let's Talk
                   <ArrowRight size={16} />
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>

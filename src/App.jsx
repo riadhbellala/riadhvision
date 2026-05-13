@@ -12,11 +12,11 @@ import TechStack from './sections/TechStack';
 import { ContainerScroll } from './components/ContainerScroll';
 import { ArrowUpRight } from 'lucide-react';
 
-import athleteImg from './assets/athlete.png';
-import domaineImg from './assets/dompaine.png';
-import lyceumImg from './assets/lyceum.png';
-import smartserviceImg from './assets/smartservicedz.png';
-import triageflowImg from './assets/triageflow.png';
+import athleteImg from './assets/athlete.webp';
+import domaineImg from './assets/dompaine.webp';
+import lyceumImg from './assets/lyceum.webp';
+import smartserviceImg from './assets/smartservicedz.webp';
+import triageflowImg from './assets/triageflow.webp';
 
 const allProjects = [
   { title: "Athléte", label: "E-commerce", image: athleteImg, url: "https://athlete-gamma.vercel.app/" },
