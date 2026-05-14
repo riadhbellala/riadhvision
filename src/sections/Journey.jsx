@@ -1,294 +1,175 @@
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { MeshDistortMaterial, Float, Environment } from "@react-three/drei";
+import * as THREE from "three";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
-  {
-    step: "01",
-    tag: "Discovery",
-    title: "You Share the Idea",
-    description:
-      "We start with a conversation. You tell me your vision, problem, and goals. I ask the right questions — about users, scope, and what success looks like.",
-    detail: "30–60 min call · Free consultation",
-    color: "#a1ebd4",
-  },
-  {
-    step: "02",
-    tag: "Planning",
-    title: "I Map the Architecture",
-    description:
-      "Your idea becomes a technical plan: stack selection, database design, feature breakdown, and a project roadmap with clear milestones.",
-    detail: "Tech spec · Timeline · Feature scope",
-    color: "#7dd3fc",
-  },
-  {
-    step: "03",
-    tag: "Design",
-    title: "UI & Experience First",
-    description:
-      "Before logic is written, the interface is designed. We define the look, feel, and flow — making sure it feels premium and intuitive, not just functional.",
-    detail: "Wireframes · Design system · Component map",
-    color: "#f9a8d4",
-  },
-  {
-    step: "04",
-    tag: "Development",
-    title: "Building the Real Thing",
-    description:
-      "Frontend, backend, APIs, database — all built clean, modular, and scalable. Progress demos shared throughout. You're never left in the dark.",
-    detail: "Bi-weekly demos · Clean code · Version controlled",
-    color: "#fcd34d",
-  },
-  {
-    step: "05",
-    tag: "Testing",
-    title: "Battle-Testing Everything",
-    description:
-      "Tested across devices, browsers, and edge cases. Performance optimized. Security hardened. A product that doesn't break in the real world.",
-    detail: "QA · Performance audit · Cross-device",
-    color: "#c4b5fd",
-  },
-  {
-    step: "06",
-    tag: "Launch",
-    title: "From Local to Live",
-    description:
-      "Deployment, DNS, CI/CD — all handled. Your product goes live with zero downtime. I stay available post-launch for fixes, iteration, and growth.",
-    detail: "Deployment · Handoff · Ongoing support",
-    color: "#a1ebd4",
-  },
+  { step: "01", tag: "Discovery",   title: "You Share the Idea",        description: "We start with a conversation. You tell me your vision, problem, and goals. I ask the right questions — about users, scope, and what success looks like.", color: "#a1ebd4" },
+  { step: "02", tag: "Planning",    title: "I Map the Architecture",    description: "Your idea becomes a technical plan: stack selection, database design, feature breakdown, and a project roadmap with clear milestones.",                  color: "#7dd3fc" },
+  { step: "03", tag: "Design",      title: "UI & Experience First",     description: "Before logic is written, the interface is designed. We define the look, feel, and flow — making sure it feels premium and intuitive.",                       color: "#f9a8d4" },
+  { step: "04", tag: "Development", title: "Building the Real Thing",   description: "Frontend, backend, APIs, database — all built clean, modular, and scalable. Progress demos shared throughout. You're never in the dark.",                    color: "#fcd34d" },
+  { step: "05", tag: "Testing",     title: "Battle-Testing Everything", description: "Tested across devices, browsers, and edge cases. Performance optimized. Security hardened. A product that doesn't break in the real world.",             color: "#c4b5fd" },
+  { step: "06", tag: "Launch",      title: "From Local to Live",        description: "Deployment, DNS, CI/CD — all handled. Your product goes live with zero downtime. I stay available post-launch for fixes and growth.",                         color: "#a1ebd4" },
 ];
 
-const Journey = () => {
-  const sectionRef = useRef(null);
-  const pathRef = useRef(null);
+/* ── 3D Core Component ────────────────────────────────────────── */
+// It smoothly interpolates its material and distortion based on activeStep
+const EvolvingCore = ({ activeStep }) => {
+  const materialRef = useRef();
+  
+  // Define the target states for each step
+  const states = [
+    { distort: 0.8, speed: 8, color: "#a1ebd4", wireframe: true,  roughness: 0.8, metalness: 0.1, emissive: "#000000" }, // Idea: Chaotic energy
+    { distort: 0.0, speed: 1, color: "#7dd3fc", wireframe: true,  roughness: 0.5, metalness: 0.8, emissive: "#000000" }, // Planning: Structured wireframe
+    { distort: 0.3, speed: 2, color: "#f9a8d4", wireframe: false, roughness: 0.1, metalness: 0.9, emissive: "#000000" }, // Design: Smooth, glassy, beautiful
+    { distort: 0.6, speed: 5, color: "#fcd34d", wireframe: false, roughness: 0.4, metalness: 0.6, emissive: "#221100" }, // Dev: Hard working, morphing, building
+    { distort: 0.0, speed: 0, color: "#c4b5fd", wireframe: false, roughness: 0.2, metalness: 0.9, emissive: "#000000" }, // Testing: Perfect, solid, impenetrable
+    { distort: 0.2, speed: 3, color: "#a1ebd4", wireframe: false, roughness: 0.1, metalness: 0.8, emissive: "#114433" }, // Launch: Alive, pulsing, glowing
+  ];
 
-  useGSAP(() => {
-    // Animate the SVG path drawing
-    if (pathRef.current) {
-      const length = pathRef.current.getTotalLength();
-      gsap.set(pathRef.current, {
-        strokeDasharray: length,
-        strokeDashoffset: length,
-      });
-      gsap.to(pathRef.current, {
-        strokeDashoffset: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 60%",
-          end: "bottom 80%",
-          scrub: 1,
-        },
-      });
-    }
+  useFrame((state, delta) => {
+    if (!materialRef.current) return;
+    const target = states[activeStep] || states[0];
+    
+    // Smoothly interpolate current values towards target values using lerp
+    materialRef.current.distort = THREE.MathUtils.lerp(materialRef.current.distort, target.distort, delta * 3);
+    materialRef.current.speed = THREE.MathUtils.lerp(materialRef.current.speed, target.speed, delta * 3);
+    materialRef.current.roughness = THREE.MathUtils.lerp(materialRef.current.roughness, target.roughness, delta * 3);
+    materialRef.current.metalness = THREE.MathUtils.lerp(materialRef.current.metalness, target.metalness, delta * 3);
+    
+    // Wireframe is a boolean, swap it at the halfway point of transition
+    materialRef.current.wireframe = target.wireframe;
 
-    // Animate each step card
-    gsap.utils.toArray(".process-step").forEach((step, i) => {
-      const fromLeft = i % 2 === 0;
-      gsap.fromTo(
-        step,
-        { opacity: 0, x: fromLeft ? -50 : 50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: step,
-            start: "top 85%",
-          },
-        }
-      );
-    });
-
-    // Animate the dots
-    gsap.utils.toArray(".map-dot").forEach((dot) => {
-      gsap.fromTo(
-        dot,
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-          scrollTrigger: {
-            trigger: dot,
-            start: "top 85%",
-          },
-        }
-      );
-    });
-  }, []);
-
-  // SVG winding path: zigzag between left and right nodes
-  // Each step is ~200px apart vertically, nodes alternate at x=120 and x=480 in a 600px wide SVG
-  const svgWidth = 600;
-  const stepHeight = 200;
-  const leftX = 110;
-  const rightX = 490;
-
-  const buildPath = () => {
-    let d = `M ${leftX} 0`;
-    steps.forEach((_, i) => {
-      const y = i * stepHeight;
-      const nextY = (i + 1) * stepHeight;
-      const currentX = i % 2 === 0 ? leftX : rightX;
-      const nextX = i % 2 === 0 ? rightX : leftX;
-
-      if (i < steps.length - 1) {
-        const midY = y + stepHeight / 2;
-        // Smooth bezier curve to next node
-        d += ` C ${currentX} ${midY}, ${nextX} ${midY}, ${nextX} ${nextY}`;
-      }
-    });
-    return d;
-  };
-
-  const totalSvgHeight = (steps.length - 1) * stepHeight + 40;
+    // Color interpolation
+    const targetColor = new THREE.Color(target.color);
+    materialRef.current.color.lerp(targetColor, delta * 3);
+    
+    const targetEmissive = new THREE.Color(target.emissive);
+    materialRef.current.emissive.lerp(targetEmissive, delta * 3);
+  });
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-transparent text-white py-28 overflow-hidden"
-    >
-      {/* Section Header */}
-      <div className="px-6 md:px-16 max-w-6xl mx-auto mb-24">
-        <p className="text-xs tracking-[0.4em] uppercase text-white/30 mb-4">
-          How I Work
-        </p>
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none uppercase">
-            Idea
-            <br />
-            <span className="text-white/20">→ Product.</span>
-          </h2>
-          <p className="text-base md:text-lg text-white/40 font-light max-w-sm md:text-right leading-relaxed">
-            Six clear steps. No surprises. From the first conversation to a live, production-ready product.
-          </p>
-        </div>
+    <Float speed={2} rotationIntensity={1} floatIntensity={2}>
+      <mesh scale={1.2}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <MeshDistortMaterial
+          ref={materialRef}
+          envMapIntensity={1}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
+        />
+      </mesh>
+    </Float>
+  );
+};
+
+/* ── Main Section ────────────────────────────────────────────── */
+const Journey = () => {
+  const containerRef = useRef(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    // Setup ScrollTriggers for each card to update the active step
+    const triggers = [];
+    gsap.utils.toArray(".journey-card").forEach((card, i) => {
+      const st = ScrollTrigger.create({
+        trigger: card,
+        start: "top center",
+        end: "bottom center",
+        onToggle: (self) => {
+          if (self.isActive) setActiveStep(i);
+        },
+      });
+      triggers.push(st);
+    });
+
+    return () => triggers.forEach(t => t.kill());
+  }, []);
+
+  return (
+    <section ref={containerRef} id="work" className="relative bg-transparent text-white py-24 min-h-screen">
+      
+      {/* Header */}
+      <div className="px-6 md:px-12 max-w-7xl mx-auto mb-16">
+        <p className="text-xs tracking-[0.4em] uppercase text-white/30 mb-4">The Process</p>
+        <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none uppercase">
+          Idea <span className="text-white/20">→ Product.</span>
+        </h2>
       </div>
 
-      {/* Roadmap */}
-      <div className="relative max-w-3xl mx-auto px-4">
-        {/* SVG Path */}
-        <svg
-          className="absolute left-1/2 -translate-x-1/2 top-0 w-full pointer-events-none"
-          viewBox={`0 0 ${svgWidth} ${totalSvgHeight}`}
-          preserveAspectRatio="xMidYMid meet"
-          style={{ height: `${totalSvgHeight}px` }}
-        >
-          <path
-            ref={pathRef}
-            d={buildPath()}
-            fill="none"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeDasharray="8 6"
-            opacity="0.15"
-          />
-          {/* Animated colored path on top */}
-          <path
-            id="colored-path"
-            d={buildPath()}
-            fill="none"
-            stroke="url(#roadGradient)"
-            strokeWidth="2"
-            strokeDasharray="8 6"
-            opacity="0.6"
-          />
-          <defs>
-            <linearGradient id="roadGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#a1ebd4" />
-              <stop offset="50%" stopColor="#7dd3fc" />
-              <stop offset="100%" stopColor="#c4b5fd" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Steps */}
-        <div
-          className="relative flex flex-col"
-          style={{ gap: `${stepHeight - 80}px`, paddingTop: "20px", paddingBottom: "20px" }}
-        >
+      <div className="max-w-7xl mx-auto px-4 md:px-12 flex flex-col md:flex-row relative">
+        
+        {/* Left: Scrollable Text Cards */}
+        <div className="w-full md:w-1/2 flex flex-col gap-[30vh] pb-[30vh] z-10">
           {steps.map((item, index) => {
-            const isLeft = index % 2 === 0;
+            const isActive = activeStep === index;
             return (
-              <div
-                key={index}
-                className={`process-step flex items-center gap-6 ${
-                  isLeft ? "flex-row" : "flex-row-reverse"
-                }`}
+              <div 
+                key={index} 
+                className={`journey-card transition-all duration-700 ${isActive ? "opacity-100 scale-100" : "opacity-30 scale-95"}`}
               >
-                {/* Card */}
-                <div className={`w-[calc(50%-40px)] ${isLeft ? "text-left" : "text-right"}`}>
-                  <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-500 group relative overflow-hidden">
-                    {/* Glow */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl pointer-events-none"
-                      style={{
-                        background: `radial-gradient(circle at ${isLeft ? "20%" : "80%"} 30%, ${item.color}20, transparent 70%)`,
-                      }}
-                    />
-
-                    <span
-                      className="inline-block text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border mb-3"
-                      style={{
-                        color: item.color,
-                        borderColor: item.color + "40",
-                        backgroundColor: item.color + "15",
-                      }}
+                <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl md:rounded-3xl p-6 lg:p-10 shadow-2xl relative overflow-hidden">
+                  {/* Subtle glow background */}
+                  <div className="absolute inset-0 opacity-20 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at top left, ${item.color}, transparent 60%)` }} />
+                  
+                  <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 relative z-10 flex-wrap">
+                    <div 
+                      className="w-8 h-8 md:w-12 md:h-12 rounded-full border-2 flex items-center justify-center font-black text-sm md:text-lg bg-black/60 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                      style={{ borderColor: item.color, color: item.color }}
+                    >
+                      {item.step}
+                    </div>
+                    <span 
+                      className="inline-block text-[9px] md:text-[11px] font-bold tracking-widest uppercase px-2 py-1 md:px-3 md:py-1.5 rounded-full border"
+                      style={{ color: item.color, borderColor: item.color + "40", backgroundColor: item.color + "15" }}
                     >
                       {item.tag}
                     </span>
-
-                    <h3 className="text-lg md:text-xl font-bold tracking-tight mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs md:text-sm text-white/50 leading-relaxed mb-4">
-                      {item.description}
-                    </p>
-                    <div className={`flex items-center gap-2 border-t border-white/5 pt-3 ${isLeft ? "" : "justify-end"}`}>
-                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                      <span className="text-[10px] text-white/30">{item.detail}</span>
-                    </div>
                   </div>
+                  
+                  <h3 className="text-lg md:text-3xl font-bold tracking-tight mb-2 md:mb-4 relative z-10">{item.title}</h3>
+                  <p className="text-[11px] md:text-lg text-white/60 font-light leading-relaxed relative z-10">{item.description}</p>
                 </div>
-
-                {/* Center Node */}
-                <div className="map-dot flex-shrink-0 flex items-center justify-center relative z-10">
-                  <div
-                    className="w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-sm bg-black/60 backdrop-blur-sm"
-                    style={{ borderColor: item.color, color: item.color, boxShadow: `0 0 20px ${item.color}40` }}
-                  >
-                    {item.step}
-                  </div>
-                </div>
-
-                {/* Spacer opposite side */}
-                <div className="w-[calc(50%-40px)]" />
               </div>
             );
           })}
         </div>
-      </div>
 
-      {/* Bottom CTA */}
-      <div className="max-w-6xl mx-auto mt-16 px-6 md:px-16 flex items-center gap-4">
-        <div className="h-px flex-1 bg-white/10" />
-        <p className="text-sm text-white/30 font-light whitespace-nowrap">
-          Ready?{" "}
-          <a
-            href="mailto:riadh5726@gmail.com"
-            className="text-white/60 hover:text-white underline underline-offset-4 transition-colors duration-200"
-          >
-            Let's start →
-          </a>
-        </p>
-        <div className="h-px flex-1 bg-white/10" />
+        {/* Right: Sticky 3D Canvas (Desktop Only) */}
+        <div className="hidden md:block w-1/2 h-[80vh] sticky top-[10vh] z-0">
+          <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={2} />
+            <directionalLight position={[-10, -10, -5]} intensity={1} color="#a1ebd4" />
+            <Environment preset="city" />
+            <EvolvingCore activeStep={activeStep} />
+          </Canvas>
+          
+          {/* Label below the 3D object */}
+          <div className="absolute bottom-10 left-0 w-full text-center pointer-events-none">
+            <p className="text-sm tracking-[0.3em] uppercase text-white/40 font-light transition-all duration-500">
+              Phase: <span style={{ color: steps[activeStep].color }} className="font-bold">{steps[activeStep].tag}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile 3D Canvas Background (Behind cards) */}
+        <div className="md:hidden absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="sticky top-[20vh] w-full h-[60vh] opacity-30 flex items-center justify-center">
+            <Canvas camera={{ position: [0, 0, 9], fov: 45 }}>
+              <ambientLight intensity={0.5} />
+              <directionalLight position={[10, 10, 5]} intensity={2} />
+              <Environment preset="city" />
+              <EvolvingCore activeStep={activeStep} />
+            </Canvas>
+          </div>
+        </div>
+
       </div>
     </section>
   );

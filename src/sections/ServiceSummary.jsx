@@ -112,7 +112,7 @@ const ServiceSummary = () => {
             ref={text1Ref}
             className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed mb-10 max-w-2xl"
           >
-            Full-stack Software Developer with more than 2 years of experience,
+            Full-stack Software Developer with high quality products ,
             working in multiple software projects, building high-quality,
             production-ready web applications.
           </div>

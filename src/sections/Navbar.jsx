@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { socials } from "../constants";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Link } from "react-scroll";
@@ -74,21 +73,6 @@ const Navbar = () => {
       );
   }, []);
 
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      if (isOpen) {
-        setShowBurger(true);
-        return;
-      }
-      const currentScrollY = window.scrollY;
-      setShowBurger(currentScrollY <= lastScrollY || currentScrollY < 10);
-      lastScrollY = currentScrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isOpen]);
-
   const toggleMenu = () => {
     if (isOpen) {
       tl.current.reverse();
@@ -129,68 +113,66 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* TOP HORIZONTAL NAVBAR */}
+      {/* TOP HORIZONTAL NAVBAR — Floating glass pill */}
       <div 
-        className={`w-full fixed top-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 transition-transform duration-500 ${showBurger ? 'translate-y-0' : '-translate-y-full'}`}
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-6xl transition-all duration-500"
       >
-        {/* Left: Expandable Logo */}
-        <div 
-          className="flex items-center cursor-pointer font-bold text-2xl tracking-widest text-white mix-blend-difference uppercase select-none"
-          onMouseEnter={() => setIsLogoHovered(true)}
-          onMouseLeave={() => setIsLogoHovered(false)}
-        >
-          <span>R</span>
-          <span 
-            className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLogoHovered ? 'max-w-[120px] opacity-100' : 'max-w-0 opacity-0'}`}
-          >
-            IADH
-          </span>
-          <span>V</span>
-          <span 
-            className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLogoHovered ? 'max-w-[120px] opacity-100' : 'max-w-0 opacity-0'}`}
-          >
-            ISION
-          </span>
-        </div>
+        <div className="flex items-center justify-between px-6 md:px-10 py-3.5 bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_4px_32px_rgba(0,0,0,0.3)] rounded-full">
 
-        {/* Center: Desktop Links */}
-        <div className="hidden md:flex items-center gap-10 text-sm font-medium text-white mix-blend-difference">
-          <Link to="work" smooth duration={1000} className="cursor-pointer hover:text-white/70 transition-colors flex items-center gap-1">
-            Works <span className="text-white/50">+</span>
-          </Link>
-          <Link to="services" smooth duration={1000} className="cursor-pointer hover:text-white/70 transition-colors flex items-center gap-1">
-            Services <span className="text-white/50">+</span>
-          </Link>
-          <Link to="contact" smooth duration={1000} className="cursor-pointer hover:text-white/70 transition-colors">
-            Contact
-          </Link>
-        </div>
-
-        {/* Right: Desktop CTA Button & Mobile Hamburger */}
-        <div className="flex items-center gap-4">
-          <Link 
-            to="contact" 
-            smooth 
-            duration={1000} 
-            className="hidden md:flex cursor-pointer items-center gap-2 bg-[#e5e5e0] text-black px-6 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform duration-300"
+          {/* Left: Expandable Logo */}
+          <div 
+            className="flex items-center cursor-pointer font-bold text-lg tracking-widest text-white uppercase select-none"
+            onMouseEnter={() => setIsLogoHovered(true)}
+            onMouseLeave={() => setIsLogoHovered(false)}
           >
-            Get In Touch <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
-          </Link>
-
-          {/* Mobile Hamburger Icon */}
-          <div
-            className="md:hidden flex flex-col items-center justify-center gap-1 transition-all duration-300 bg-white mix-blend-difference rounded-full cursor-pointer w-10 h-10"
-            onClick={toggleMenu}
-          >
-            <span
-              ref={topLineRef}
-              className="block w-5 h-0.5 bg-black rounded-full origin-center"
-            ></span>
-            <span
-              ref={bottomLineRef}
-              className="block w-5 h-0.5 bg-black rounded-full origin-center"
-            ></span>
+            <span>R</span>
+            <span 
+              className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLogoHovered ? 'max-w-[60px] opacity-100' : 'max-w-0 opacity-0'}`}
+            >
+              IADH
+            </span>
+            <span>V</span>
+            <span 
+              className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLogoHovered ? 'max-w-[60px] opacity-100' : 'max-w-0 opacity-0'}`}
+            >
+              ISION
+            </span>
           </div>
+
+          {/* Center: Desktop Links */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/80">
+            <Link to="work" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors flex items-center gap-1">
+              Works <span className="text-white/40">+</span>
+            </Link>
+            <Link to="services" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors flex items-center gap-1">
+              Services <span className="text-white/40">+</span>
+            </Link>
+            <Link to="contact" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors">
+              Contact
+            </Link>
+          </div>
+
+          {/* Right: CTA & Hamburger */}
+          <div className="flex items-center gap-3">
+            <Link 
+              to="contact" 
+              smooth 
+              duration={1000} 
+              className="hidden md:flex cursor-pointer items-center gap-2 bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-[#a1ebd4] transition-colors duration-300"
+            >
+              Get In Touch <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
+            </Link>
+
+            {/* Mobile Hamburger */}
+            <div
+              className="md:hidden flex flex-col items-center justify-center gap-1.5 cursor-pointer w-9 h-9 rounded-full bg-white/10 border border-white/20"
+              onClick={toggleMenu}
+            >
+              <span ref={topLineRef} className="block w-4 h-0.5 bg-white rounded-full origin-center"></span>
+              <span ref={bottomLineRef} className="block w-4 h-0.5 bg-white rounded-full origin-center"></span>
+            </div>
+          </div>
+
         </div>
       </div>
     </>

@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import Marquee from "react-fast-marquee";
 
 const Hero = () => {

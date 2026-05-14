@@ -11,7 +11,7 @@ const ContactSummary = () => {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const btnRef = useRef(null);
-  const [hovered, setHovered] = useState(false);
+  const [, setHovered] = useState(false);
 
   // Magnetic button
   const handleMouseMove = (e) => {
