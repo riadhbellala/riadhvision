@@ -1,154 +1,39 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-const rotatingSkills = [
-  "modern digital products",
-  "scalable backend systems",
-  "seamless user experiences",
-  "high-performance web apps",
-  "AI-integrated solutions",
-];
-
-const TextRotator = () => {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % rotatingSkills.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <span className="relative inline-flex items-center">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.35, ease: "easeInOut" }}
-          className="text-[#5a9ab8] font-medium"
-        >
-          {rotatingSkills[index]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-};
-
-const AnimatedTitle = () => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="flex items-center justify-center mb-10 group cursor-default"
-    >
-      <div className="font-syne text-[clamp(2.5rem,6vw,5rem)] font-bold text-white flex items-center tracking-tighter leading-none">
-        {/* R -> RIADH */}
-        <div className="flex items-center">
-          <span className="translate-x-2 group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] relative z-10">
-            R
-          </span>
-          <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <span className="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out delay-75 whitespace-nowrap">
-              IADH
-            </span>
-          </div>
-        </div>
-        {/* V -> VISION */}
-        <div className="flex items-center text-white/60 group-hover:text-white/90 transition-colors duration-700 group-hover:ml-3">
-          <span className="-translate-x-2 group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] mix-blend-screen relative z-0">
-            V
-          </span>
-          <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <span className="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out delay-100 whitespace-nowrap">
-              ISION
-            </span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+import { useRef } from "react";
+import Marquee from "react-fast-marquee";
 
 const Hero = () => {
   return (
-    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section id="home" className="relative flex flex-col justify-between min-h-screen bg-transparent text-white overflow-hidden pb-10">
+      
+      {/* Foreground Content */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-between pointer-events-none">
+        
+        {/* Top Left Text */}
+        <div className="pt-32 pl-6 md:pl-12 text-white/50 text-xs md:text-sm tracking-[0.2em] uppercase font-light">
+          Based in Algeria
+        </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto w-full gap-8">
+        {/* HUGE Marquee Text in Middle */}
+        <div className="flex-1 flex flex-col justify-center">
+          <Marquee speed={100} className="overflow-hidden w-full flex items-center mix-blend-difference">
+            <h1 className="text-[120px] sm:text-[180px] md:text-[250px] lg:text-[320px] leading-none font-bold tracking-tighter whitespace-nowrap flex items-center text-white">
+              Riadh Vision 
+              <span className="w-8 h-8 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-[#a1ebd4] rounded-full mx-10 md:mx-20 inline-block"></span>
+            </h1>
+            <h1 className="text-[120px] sm:text-[180px] md:text-[250px] lg:text-[320px] leading-none font-bold tracking-tighter whitespace-nowrap flex items-center text-white">
+              Riadh Vision 
+              <span className="w-8 h-8 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-[#a1ebd4] rounded-full mx-10 md:mx-20 inline-block"></span>
+            </h1>
+          </Marquee>
+        </div>
 
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#426C81] shadow-[0_0_8px_#426C81] animate-pulse" />
-          <span className="text-xs font-medium tracking-[0.2em] text-white/60 uppercase">
-            From idea to reality
-          </span>
-        </motion.div>
-
-        {/* Logo / Title */}
-        <AnimatedTitle />
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-xl md:text-2xl font-light text-white/70 leading-relaxed -mt-4"
-        >
-          I build <TextRotator /> — <br className="hidden sm:block" />
-          with precision, speed, and premium design.
-        </motion.p>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-16 h-[1px] bg-white/10 origin-center"
-        />
-
-        {/* Sub-description */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="text-sm md:text-base text-white/40 font-light max-w-xl mx-auto leading-relaxed -mt-2"
-        >
-          Full-stack developer crafting digital experiences that are fast, intuitive, and thoughtfully engineered.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
-        >
-          <a
-            href="#projects"
-            className="w-full sm:w-auto px-8 py-3.5 bg-white text-black rounded-full text-sm font-semibold hover:bg-neutral-100 transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_20px_rgba(255,255,255,0.12)]"
-          >
-            View Projects
-          </a>
-          <a
-            href="#contact"
-            className="w-full sm:w-auto px-8 py-3.5 bg-white/5 border border-white/10 text-white/80 rounded-full text-sm font-semibold hover:bg-white/10 hover:text-white transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-md"
-          >
-            Contact Me
-          </a>
-        </motion.div>
+        {/* Bottom Right Text */}
+        <div className="pb-10 pr-6 md:pr-12 text-right flex flex-col gap-1">
+          <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Full-Stack Developer</h2>
+          <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Design Scalable Systems</h2>
+        </div>
 
       </div>
-
-
 
     </section>
   );

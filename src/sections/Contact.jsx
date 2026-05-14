@@ -1,46 +1,148 @@
-import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { projects, socials } from "../constants";
+
+const socialIcons = {
+  Instagram: "mdi:instagram",
+  WhatsApp: "mdi:whatsapp",
+  GitHub: "mdi:github",
+};
+
+const navLinks = [
+  { label: "Home", href: "#home" },
+  { label: "Services", href: "#services" },
+  { label: "Works", href: "#work" },
+  { label: "Contact", href: "#contact" },
+];
+
+const serviceLinks = [
+  "Custom App",
+  "Full-stack",
+  "API Integration",
+  "SaaS Softwares",
+  "E-Commerce",
+];
 
 const Contact = () => {
-  const whatsappUrl = "https://wa.me/213555711088";
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      window.location.href = `mailto:riadh5726@gmail.com?subject=Getting in Touch&body=From: ${email}`;
+    }
+  };
 
   return (
-    <section id="contact" className="relative z-30 py-32 px-6">
-      <div className="container mx-auto max-w-3xl text-center">
-        
-        <p className="text-sm font-medium tracking-widest text-[#426C81] uppercase mb-6">Get In Touch</p>
-        
-        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 font-syne text-white leading-tight">
-          Let's build something <br className="hidden md:block" /> extraordinary.
-        </h2>
-        
-        <p className="text-white/50 text-lg mb-12 max-w-xl mx-auto font-light leading-relaxed">
-          Have a project in mind or just want to say hi? I'm always open to discussing new ideas, collaborations, and opportunities.
-        </p>
+    <footer id="contact" className="bg-[#0d0d0d] pt-8">
+      <div className="bg-[#f0ede6] text-black rounded-t-[2rem] overflow-hidden">
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="mailto:riadh5726@gmail.com"
-            className="group flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-neutral-200 transition-all duration-300 hover:-translate-y-1 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+        {/* Top Content Area */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 px-8 md:px-14 pt-14 pb-10">
+
+          {/* Left: Stay Updated + Socials */}
+          <div className="flex flex-col gap-8">
+            <div>
+              <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-6">
+                Stay Updated with Riadh's News
+              </h3>
+              {/* Email Input */}
+              <form onSubmit={handleSubmit} className="flex items-center gap-3 bg-black/10 rounded-full px-5 py-3 max-w-sm">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your Email Address"
+                  className="flex-1 bg-transparent text-sm text-black placeholder:text-black/40 outline-none"
+                />
+                <button
+                  type="submit"
+                  className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center flex-shrink-0 hover:scale-110 transition-transform duration-200"
+                >
+                  <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
+                </button>
+              </form>
+            </div>
+
+            {/* Social Icons */}
+            <div className="flex gap-3">
+              {socials.map((social, i) => (
+                <a
+                  key={i}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-black text-white rounded-lg flex items-center justify-center hover:scale-110 transition-transform duration-200"
+                  aria-label={social.name}
+                >
+                  <Icon icon={socialIcons[social.name] || "mdi:link"} className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Nav Columns */}
+          <div className="grid grid-cols-3 gap-6">
+            {/* Nav Links */}
+            <div className="flex flex-col gap-3">
+              {navLinks.map((link, i) => (
+                <a
+                  key={i}
+                  href={link.href}
+                  className="text-sm text-black/70 hover:text-black transition-colors duration-200"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
+            {/* Projects */}
+            <div className="flex flex-col gap-3">
+              {projects.slice(0, 5).map((p, i) => (
+                <a
+                  key={i}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-black/70 hover:text-black transition-colors duration-200"
+                >
+                  {p.name}
+                </a>
+              ))}
+            </div>
+
+            {/* Services */}
+            <div className="flex flex-col gap-3">
+              {serviceLinks.map((s, i) => (
+                <span key={i} className="text-sm text-black/70">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="w-full h-px bg-black/10 mx-auto" />
+
+        {/* Huge Name Typography */}
+        <div className="px-4 md:px-8 overflow-hidden leading-none select-none pt-4">
+          <h1
+            className="font-black tracking-tighter text-black w-full whitespace-nowrap"
+            style={{ fontSize: "clamp(80px, 18vw, 260px)", lineHeight: 0.85 }}
           >
-            Send an Email
-            <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-3 px-8 py-4 bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] rounded-full font-semibold hover:bg-[#25D366]/20 transition-all duration-300 hover:-translate-y-1"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            WhatsApp Me
-          </a>
+            RIADHVISION
+          </h1>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center px-8 md:px-14 py-6 gap-2 text-xs text-black/40 font-light">
+          <span>© {new Date().getFullYear()} Riadh Bellala. All rights reserved.</span>
+          <span>Built &amp; Designed by Riadh Vision</span>
         </div>
 
       </div>
-    </section>
+    </footer>
   );
 };
 
