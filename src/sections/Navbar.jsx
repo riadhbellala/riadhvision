@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Link } from "react-scroll";
@@ -14,7 +14,6 @@ const Navbar = () => {
   const iconTl = useRef(null);
   
   const [isOpen, setIsOpen] = useState(false);
-  const [showBurger, setShowBurger] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   useGSAP(() => {

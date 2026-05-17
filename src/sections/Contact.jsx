@@ -128,8 +128,8 @@ const Contact = () => {
         {/* Huge Name Typography */}
         <div className="px-4 md:px-8 overflow-hidden leading-none select-none pt-4">
           <h1
-            className="font-black tracking-tighter text-black w-full whitespace-nowrap"
-            style={{ fontSize: "clamp(80px, 18vw, 260px)", lineHeight: 0.85 }}
+            className="font-black tracking-tighter text-black w-full whitespace-nowrap text-center"
+            style={{ fontSize: "clamp(60px, 14vw, 200px)", lineHeight: 0.85 }}
           >
             RIADHVISION
           </h1>

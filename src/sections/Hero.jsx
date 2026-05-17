@@ -1,4 +1,26 @@
 import Marquee from "react-fast-marquee";
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useMemo } from "react";
+import Robot from "../components/Robot";
+
+// We create a wrapper that generates a totally unique ID for each cloned instance in the marquee.
+// This allows the browser to render 4+ copies of the robot scrolling smoothly without crashing WebGL!
+const MarqueeRobot = () => {
+  const uniqueId = useMemo(() => Math.random().toString(), []);
+  return (
+    <div className="w-32 h-32 md:w-64 md:h-64 lg:w-[400px] lg:h-[400px] mx-8 md:mx-16 inline-block relative pointer-events-auto mix-blend-screen">
+      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+        <Suspense fallback={null}>
+          <ambientLight intensity={1.5} />
+          <directionalLight position={[10, 10, 5]} intensity={3} />
+          <directionalLight position={[-10, -10, -5]} intensity={1} />
+          {/* We turn off the massive "isHero" drift because it would fly out of its small marquee container */}
+          <Robot scale={0.03} position={[0, -0.6, 0]} modelPath={`/models/mini_robot.glb?v=${uniqueId}`} isHero={false} />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+};
 
 const Hero = () => {
   return (
@@ -17,11 +39,11 @@ const Hero = () => {
           <Marquee speed={100} className="overflow-hidden w-full flex items-center mix-blend-difference">
             <h1 className="text-[120px] sm:text-[180px] md:text-[250px] lg:text-[320px] leading-none font-bold tracking-tighter whitespace-nowrap flex items-center text-white">
               Riadh Vision 
-              <span className="w-8 h-8 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-[#a1ebd4] rounded-full mx-10 md:mx-20 inline-block"></span>
+              <MarqueeRobot />
             </h1>
             <h1 className="text-[120px] sm:text-[180px] md:text-[250px] lg:text-[320px] leading-none font-bold tracking-tighter whitespace-nowrap flex items-center text-white">
               Riadh Vision 
-              <span className="w-8 h-8 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-[#a1ebd4] rounded-full mx-10 md:mx-20 inline-block"></span>
+              <MarqueeRobot />
             </h1>
           </Marquee>
         </div>

@@ -20,11 +20,8 @@ const Works = () => {
         trigger: block,
         start: "top center",
         end: "bottom center",
-        onToggle: (self) => {
-          if (self.isActive) {
-            setActiveIndex(index);
-          }
-        },
+        onEnter: () => setActiveIndex(index),
+        onEnterBack: () => setActiveIndex(index),
       });
     });
   }, []);
