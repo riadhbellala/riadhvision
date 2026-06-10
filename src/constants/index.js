@@ -85,8 +85,8 @@ export const projects = [
     description:
       "A premium e-commerce platform for sports gear with product filtering, cart management, and a seamless checkout experience.",
     href: "https://athlete-gamma.vercel.app/",
-    image: "/assets/projects/athlete.webp",
-    bgImage: "/assets/projects/athlete.webp",
+    image: "/assets/projects/athlete1.webp",
+    bgImage: "/assets/projects/athlete1.webp",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Vite" },
@@ -100,8 +100,8 @@ export const projects = [
     description:
       "A modern SaaS platform for automated appointment booking and service management tailored for Algerian businesses.",
     href: "https://smartservice-dz.vercel.app/",
-    image: "/assets/projects/smartservicedz.webp",
-    bgImage: "/assets/projects/smartservicedz.webp",
+    image: "/assets/projects/smartservice.webp",
+    bgImage: "/assets/projects/smartservice.webp",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Node.js" },
@@ -111,6 +111,21 @@ export const projects = [
   },
   {
     id: 3,
+    name: "Ronaldinho Store — Sneaker Destination",
+    description:
+      "The ultimate streetwear and premium sneaker destination. Experience street culture and exclusive sneaker drops.",
+    href: "https://ronaldinho-store-tau.vercel.app",
+    image: "/assets/projects/ronadlihno.webp",
+    bgImage: "/assets/projects/ronadlihno.webp",
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Vite" },
+      { id: 3, name: "Tailwind CSS" },
+      { id: 4, name: "E-commerce" },
+    ],
+  },
+  {
+    id: 4,
     name: "Dopamine — Coffee Brand Experience",
     description:
       "A specialty coffee brand with a cinematic UI, interactive menu, order management, and a full checkout flow.",
@@ -125,7 +140,7 @@ export const projects = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     name: "TriageFlow — Hospital Triage Dashboard",
     description:
       "A bilingual (Arabic/French) smart hospital triage dashboard for real-time patient prioritization and medical staff management.",
@@ -140,7 +155,7 @@ export const projects = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     name: "Lyceum — Education Platform",
     description:
       "A clean and modern educational platform built to manage courses, students, and academic resources seamlessly.",

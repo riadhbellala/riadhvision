@@ -40,15 +40,20 @@ const Works = () => {
             </p>
           </div>
 
-          <div className="relative w-full flex-1 max-h-[50vh] md:max-h-[70vh] rounded-2xl overflow-hidden shadow-2xl">
+          <div className="group/container relative w-full flex-1 max-h-[50vh] md:max-h-[70vh] rounded-2xl overflow-hidden shadow-2xl">
             {projects.map((project, index) => (
               <img
                 key={project.id}
                 src={project.image}
                 alt={project.name}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                className={`absolute inset-0 w-full h-full object-cover object-top group-hover/container:object-bottom ${
                   index === activeIndex ? "opacity-100 scale-100" : "opacity-0 scale-105"
                 }`}
+                style={{
+                  transitionProperty: "object-position, opacity, transform",
+                  transitionDuration: "5s, 700ms, 700ms",
+                  transitionTimingFunction: "ease-in-out"
+                }}
               />
             ))}
             
