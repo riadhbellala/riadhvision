@@ -96,6 +96,21 @@ export const projects = [
   },
   {
     id: 2,
+    name: "HYDRAME",
+    description:
+      "A sleek, modern web application showcasing the Hydrame brand with an interactive and responsive user experience.",
+    href: "https://hydrame-theta.vercel.app/",
+    image: "/assets/projects/hydrame.png",
+    bgImage: "/assets/projects/hydrame.png",
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Vite" },
+      { id: 3, name: "Tailwind CSS" },
+      { id: 4, name: "Framer Motion" },
+    ],
+  },
+  {
+    id: 3,
     name: "SmartService DZ — Appointment SaaS",
     description:
       "A modern SaaS platform for automated appointment booking and service management tailored for Algerian businesses.",
@@ -110,7 +125,7 @@ export const projects = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     name: "Ronaldinho Store — Sneaker Destination",
     description:
       "The ultimate streetwear and premium sneaker destination. Experience street culture and exclusive sneaker drops.",
@@ -125,7 +140,7 @@ export const projects = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     name: "Dopamine — Coffee Brand Experience",
     description:
       "A specialty coffee brand with a cinematic UI, interactive menu, order management, and a full checkout flow.",
@@ -140,7 +155,7 @@ export const projects = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     name: "TriageFlow — Hospital Triage Dashboard",
     description:
       "A bilingual (Arabic/French) smart hospital triage dashboard for real-time patient prioritization and medical staff management.",
@@ -152,21 +167,6 @@ export const projects = [
       { id: 2, name: "Dashboard" },
       { id: 3, name: "Healthcare" },
       { id: 4, name: "Bilingual" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Lyceum — Education Platform",
-    description:
-      "A clean and modern educational platform built to manage courses, students, and academic resources seamlessly.",
-    href: "https://lyceum-club.vercel.app/",
-    image: "/assets/projects/lyceum.webp",
-    bgImage: "/assets/projects/lyceum.webp",
-    frameworks: [
-      { id: 1, name: "React" },
-      { id: 2, name: "Vite" },
-      { id: 3, name: "Tailwind CSS" },
-      { id: 4, name: "Education" },
     ],
   },
 ];
