@@ -1,16 +1,13 @@
 import React from "react";
-import Navbar from "./sections/Navbar";
-import Hero from "./sections/Hero";
-import ServiceSummary from "./sections/ServiceSummary";
-import Services from "./sections/Services";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ReactLenis from "lenis/react";
-import Works from "./sections/Works";
-import ContactSummary from "./sections/ContactSummary";
-import Contact from "./sections/Contact";
-import Journey from "./sections/Journey";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars, Sparkles } from "@react-three/drei";
 import { useRef } from "react";
+
+import Home from "./pages/Home";
+import ProjectDetails from "./pages/ProjectDetails";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Universe = () => {
   const groupRef = useRef();
@@ -30,7 +27,7 @@ const Universe = () => {
 
 const App = () => {
   return (
-    <ReactLenis root className="relative w-screen min-h-screen overflow-x-auto">
+    <ReactLenis root className="relative w-screen min-h-screen overflow-x-hidden">
       {/* Global Universe Canvas — fixed behind all dark sections */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 10], fov: 45, near: 0.1, far: 1000 }}>
@@ -39,15 +36,14 @@ const App = () => {
         </Canvas>
       </div>
 
-      <div className="relative z-10">
-        <Navbar />
-        <Hero />
-        <ServiceSummary />
-        <Works />
-        <Services />
-        <Journey />
-        <ContactSummary />
-        <Contact />
+      <div className="relative z-10 min-h-screen">
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/project/:slug" element={<ProjectDetails />} />
+          </Routes>
+        </Router>
       </div>
     </ReactLenis>
   );
