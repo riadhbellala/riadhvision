@@ -8,6 +8,7 @@ import { useRef } from "react";
 import Home from "./pages/Home";
 import ProjectDetails from "./pages/ProjectDetails";
 import ScrollToTop from "./components/ScrollToTop";
+import Chatbot from "./components/Chatbot";
 
 const Universe = () => {
   const groupRef = useRef();
@@ -27,7 +28,7 @@ const Universe = () => {
 
 const App = () => {
   return (
-    <ReactLenis root className="relative w-screen min-h-screen overflow-x-hidden">
+    <ReactLenis root className="relative w-screen min-h-screen overflow-x-hidden" style={{ position: "relative" }}>
       {/* Global Universe Canvas — fixed behind all dark sections */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 10], fov: 45, near: 0.1, far: 1000 }}>
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/project/:slug" element={<ProjectDetails />} />
           </Routes>
+          <Chatbot />
         </Router>
       </div>
     </ReactLenis>

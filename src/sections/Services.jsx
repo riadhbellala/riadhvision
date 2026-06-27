@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import {  useTransform, useScroll, useSpring } from "framer-motion";
+import { motion, useTransform, useScroll, useSpring } from "framer-motion";
 import { servicesData } from "../constants";
 import ServiceCard from "../components/ServiceCard";
 
