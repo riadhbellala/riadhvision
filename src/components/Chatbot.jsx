@@ -132,17 +132,19 @@ const Chatbot = () => {
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             style={{
               position: "fixed",
-              bottom: isMobile ? "90px" : "110px",
-              right: isMobile ? "16px" : "32px",
-              width: isMobile ? "calc(100vw - 32px)" : "420px",
-              height: isMobile ? "calc(100vh - 120px)" : "600px",
-              maxHeight: "800px",
-              background: "rgba(8, 8, 8, 0.75)",
+              top: isMobile ? 0 : "auto",
+              bottom: isMobile ? 0 : "110px",
+              left: isMobile ? 0 : "auto",
+              right: isMobile ? 0 : "32px",
+              width: isMobile ? "100%" : "420px",
+              height: isMobile ? "100dvh" : "600px",
+              maxHeight: isMobile ? "100dvh" : "800px",
+              background: isMobile ? "rgba(8, 8, 8, 0.95)" : "rgba(8, 8, 8, 0.75)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(44, 85, 132, 0.3)",
+              border: isMobile ? "none" : "1px solid rgba(44, 85, 132, 0.3)",
               boxShadow: "0 0 40px rgba(44, 85, 132, 0.15)",
-              borderRadius: "16px",
+              borderRadius: isMobile ? "0px" : "16px",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -190,7 +192,7 @@ const Chatbot = () => {
                   }}
                 />
               </div>
-              <div>
+              <div style={{ flex: 1 }}>
                 <p style={{ margin: 0, color: "#ffffff", fontSize: "14px", fontWeight: "600", letterSpacing: "0.01em" }}>
                   Riadh's Assistant
                 </p>
@@ -198,6 +200,21 @@ const Chatbot = () => {
                   Ask me anything
                 </p>
               </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "rgba(255,255,255,0.5)",
+                  cursor: "pointer",
+                  padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CloseIcon />
+              </button>
             </div>
 
             {/* Messages Area */}
@@ -345,7 +362,7 @@ const Chatbot = () => {
                     : "1px solid rgba(255, 255, 255, 0.08)",
                   borderRadius: "8px",
                   color: "#ffffff",
-                  fontSize: "14px",
+                  fontSize: "16px", // 16px strictly prevents iOS zoom bug
                   outline: "none",
                   transition: "border-color 0.2s ease",
                   fontFamily: "inherit",
@@ -428,8 +445,8 @@ const Chatbot = () => {
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         style={{
           position: "fixed",
-          bottom: isOpen ? (isMobile ? "16px" : "32px") : (isMobile ? "12px" : "24px"),
-          right: isOpen ? (isMobile ? "16px" : "32px") : (isMobile ? "12px" : "24px"),
+          bottom: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "12px" : "24px"),
+          right: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "12px" : "24px"),
           width: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
           height: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
           borderRadius: "50%",
