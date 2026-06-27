@@ -4,9 +4,13 @@ import { Canvas } from "@react-three/fiber";
 import Robot from "./Robot";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
-const ChatIcon = () => (
+const RobotIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    <rect x="3" y="11" width="18" height="10" rx="2" />
+    <circle cx="12" cy="5" r="2" />
+    <path d="M12 7v4" />
+    <line x1="8" y1="16" x2="8.01" y2="16" />
+    <line x1="16" y1="16" x2="16.01" y2="16" />
   </svg>
 );
 
@@ -55,15 +59,25 @@ const Chatbot = () => {
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const [isHoveringSend, setIsHoveringSend] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  const sendMessage = async () => {
-    const trimmed = input.trim();
+  const sendMessage = async (textOverride) => {
+    const textToSend = typeof textOverride === "string" ? textOverride : input;
+    const trimmed = textToSend.trim();
     if (!trimmed || isLoading) return;
 
     const userMessage = { role: "user", content: trimmed };
@@ -118,10 +132,11 @@ const Chatbot = () => {
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             style={{
               position: "fixed",
-              bottom: "100px",
-              right: "32px",
-              width: "360px",
-              height: "500px",
+              bottom: isMobile ? "90px" : "110px",
+              right: isMobile ? "16px" : "32px",
+              width: isMobile ? "calc(100vw - 32px)" : "420px",
+              height: isMobile ? "calc(100vh - 120px)" : "600px",
+              maxHeight: "800px",
               background: "rgba(8, 8, 8, 0.75)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
@@ -159,7 +174,7 @@ const Chatbot = () => {
                     color: "rgba(44, 85, 132, 1)",
                   }}
                 >
-                  <ChatIcon />
+                  <RobotIcon />
                 </div>
                 {/* Online dot */}
                 <span
@@ -234,6 +249,45 @@ const Chatbot = () => {
                   </div>
                 </motion.div>
               ))}
+
+              {/* Suggestions (Only show at the start) */}
+              {messages.length === 1 && !isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "4px" }}
+                >
+                  {["What services do you offer?", "How much for a website?", "Tell me about your projects."].map((suggestion, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => sendMessage(suggestion)}
+                      style={{
+                        background: "rgba(44, 85, 132, 0.15)",
+                        border: "1px solid rgba(44, 85, 132, 0.4)",
+                        borderRadius: "20px",
+                        padding: "6px 12px",
+                        color: "#a1ebd4",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontFamily: "inherit",
+                        whiteSpace: "nowrap"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "rgba(44, 85, 132, 0.3)";
+                        e.currentTarget.style.borderColor = "rgba(44, 85, 132, 0.6)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "rgba(44, 85, 132, 0.15)";
+                        e.currentTarget.style.borderColor = "rgba(44, 85, 132, 0.4)";
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
 
               {/* Typing Indicator */}
               <AnimatePresence>
@@ -343,8 +397,8 @@ const Chatbot = () => {
             transition={{ delay: 1.5, duration: 0.4, type: "spring" }}
             style={{
               position: "fixed",
-              bottom: "54px",
-              right: "140px",
+              bottom: isMobile ? "32px" : "48px",
+              right: isMobile ? "130px" : "140px",
               background: "rgba(44, 85, 132, 0.75)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
@@ -374,10 +428,10 @@ const Chatbot = () => {
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         style={{
           position: "fixed",
-          bottom: isOpen ? "32px" : "16px",
-          right: isOpen ? "32px" : "16px",
-          width: isOpen ? "64px" : "140px",
-          height: isOpen ? "64px" : "140px",
+          bottom: isOpen ? (isMobile ? "16px" : "32px") : (isMobile ? "12px" : "24px"),
+          right: isOpen ? (isMobile ? "16px" : "32px") : (isMobile ? "12px" : "24px"),
+          width: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
+          height: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
           borderRadius: "50%",
           border: isOpen ? "1px solid rgba(44, 85, 132, 0.6)" : "none",
           background: isOpen ? "rgba(44, 85, 132, 0.15)" : "transparent",
@@ -423,7 +477,7 @@ const Chatbot = () => {
                   <ambientLight intensity={1.5} />
                   <directionalLight position={[10, 10, 5]} intensity={3} />
                   <directionalLight position={[-10, -10, -5]} intensity={1} />
-                  <Robot scale={0.035} position={[0, -0.6, 0]} isHero={false} />
+                  <Robot scale={0.026} position={[0, -0.4, 0]} isHero={false} />
                 </Suspense>
               </Canvas>
             </motion.div>
