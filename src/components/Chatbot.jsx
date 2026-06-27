@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import Robot from "./Robot";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const ChatIcon = () => (
@@ -185,6 +187,7 @@ const Chatbot = () => {
 
             {/* Messages Area */}
             <div
+              data-lenis-prevent="true"
               style={{
                 flex: 1,
                 overflowY: "auto",
@@ -330,6 +333,38 @@ const Chatbot = () => {
         )}
       </AnimatePresence>
 
+      {/* ── Chat Tooltip ── */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.9 }}
+            transition={{ delay: 1.5, duration: 0.4, type: "spring" }}
+            style={{
+              position: "fixed",
+              bottom: "54px",
+              right: "140px",
+              background: "rgba(44, 85, 132, 0.75)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              padding: "10px 16px",
+              borderRadius: "16px 16px 4px 16px",
+              border: "1px solid rgba(44, 85, 132, 0.4)",
+              color: "#fff",
+              fontSize: "13px",
+              pointerEvents: "none",
+              zIndex: 9999,
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+              whiteSpace: "nowrap",
+              fontFamily: "inherit"
+            }}
+          >
+            *Beep boop* 🤖 Need any help?
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Floating Toggle Button ── */}
       <motion.button
         onClick={() => setIsOpen((v) => !v)}
@@ -339,18 +374,18 @@ const Chatbot = () => {
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         style={{
           position: "fixed",
-          bottom: "32px",
-          right: "32px",
-          width: "56px",
-          height: "56px",
+          bottom: isOpen ? "32px" : "16px",
+          right: isOpen ? "32px" : "16px",
+          width: isOpen ? "64px" : "140px",
+          height: isOpen ? "64px" : "140px",
           borderRadius: "50%",
-          border: "1px solid rgba(44, 85, 132, 0.6)",
-          background: "rgba(44, 85, 132, 0.15)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          boxShadow: isHoveringButton
+          border: isOpen ? "1px solid rgba(44, 85, 132, 0.6)" : "none",
+          background: isOpen ? "rgba(44, 85, 132, 0.15)" : "transparent",
+          backdropFilter: isOpen ? "blur(12px)" : "none",
+          WebkitBackdropFilter: isOpen ? "blur(12px)" : "none",
+          boxShadow: isOpen && isHoveringButton
             ? "0 0 30px rgba(44, 85, 132, 0.6)"
-            : "0 0 20px rgba(44, 85, 132, 0.4)",
+            : isOpen ? "0 0 20px rgba(44, 85, 132, 0.4)" : "none",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
@@ -358,20 +393,41 @@ const Chatbot = () => {
           color: "#ffffff",
           zIndex: 9999,
           outline: "none",
-          transition: "box-shadow 0.3s ease",
+          transition: "box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease",
+          padding: 0
         }}
       >
         <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={isOpen ? "close" : "chat"}
-            initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
-            animate={{ opacity: 1, rotate: 0, scale: 1 }}
-            exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
-            transition={{ duration: 0.2 }}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-          >
-            {isOpen ? <CloseIcon /> : <ChatIcon />}
-          </motion.span>
+          {isOpen ? (
+            <motion.span
+              key="close"
+              initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <CloseIcon />
+            </motion.span>
+          ) : (
+            <motion.div
+              key="robot"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.2 }}
+              style={{ width: "100%", height: "100%", overflow: "visible" }}
+            >
+              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+                <Suspense fallback={null}>
+                  <ambientLight intensity={1.5} />
+                  <directionalLight position={[10, 10, 5]} intensity={3} />
+                  <directionalLight position={[-10, -10, -5]} intensity={1} />
+                  <Robot scale={0.035} position={[0, -0.6, 0]} isHero={false} />
+                </Suspense>
+              </Canvas>
+            </motion.div>
+          )}
         </AnimatePresence>
       </motion.button>
     </>
