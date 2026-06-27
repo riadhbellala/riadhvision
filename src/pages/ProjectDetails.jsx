@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "../constants";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
