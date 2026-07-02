@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
+import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import Robot from "./Robot";
@@ -262,7 +263,7 @@ const Chatbot = () => {
                           }),
                     }}
                   >
-                    {msg.content}
+                    <ReactMarkdown components={{ p: ({node, ...props}) => <p style={{margin: 0, color: 'white', fontSize: '14px', lineHeight: '1.6'}} {...props} />, ul: ({node, ...props}) => <ul style={{paddingLeft: '16px', margin: '6px 0'}} {...props} />, ol: ({node, ...props}) => <ol style={{paddingLeft: '16px', margin: '6px 0'}} {...props} />, li: ({node, ...props}) => <li style={{margin: '3px 0', fontSize: '14px', color: 'white'}} {...props} />, strong: ({node, ...props}) => <strong style={{color: 'white', fontWeight: 600}} {...props} /> }}>{msg.content}</ReactMarkdown>
                   </div>
                 </motion.div>
               ))}
