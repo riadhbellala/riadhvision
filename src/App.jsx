@@ -10,6 +10,9 @@ import ProjectDetails from "./pages/ProjectDetails";
 import ProjectRequest from "./pages/ProjectRequest";
 import ScrollToTop from "./components/ScrollToTop";
 import Chatbot from "./components/Chatbot";
+import Login from "./pages/admin/Login";
+import Dashboard from "./pages/admin/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Universe = () => {
   const groupRef = useRef();
@@ -45,6 +48,9 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/project/:slug" element={<ProjectDetails />} />
             <Route path="/start" element={<ProjectRequest />} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           </Routes>
           <Chatbot />
         </Router>
