@@ -7,6 +7,7 @@ import { useRef } from "react";
 
 import Home from "./pages/Home";
 import ProjectDetails from "./pages/ProjectDetails";
+import ProjectRequest from "./pages/ProjectRequest";
 import ScrollToTop from "./components/ScrollToTop";
 import Chatbot from "./components/Chatbot";
 
@@ -43,6 +44,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project/:slug" element={<ProjectDetails />} />
+            <Route path="/start" element={<ProjectRequest />} />
           </Routes>
           <Chatbot />
         </Router>

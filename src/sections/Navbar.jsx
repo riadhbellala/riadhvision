@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Link } from "react-scroll";
+import { Link as RouterLink } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 const Navbar = () => {
@@ -153,14 +154,12 @@ const Navbar = () => {
 
           {/* Right: CTA & Hamburger */}
           <div className="flex items-center gap-3">
-            <Link 
-              to="contact" 
-              smooth 
-              duration={1000} 
+            <RouterLink 
+              to="/start" 
               className="hidden md:flex cursor-pointer items-center gap-2 bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-[#a1ebd4] transition-colors duration-300"
             >
-              Get In Touch <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
-            </Link>
+              Start Project <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
+            </RouterLink>
 
             {/* Mobile Hamburger */}
             <div

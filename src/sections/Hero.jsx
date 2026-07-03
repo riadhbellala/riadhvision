@@ -1,6 +1,8 @@
 import Marquee from "react-fast-marquee";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import Robot from "../components/Robot";
 
 // We create a wrapper that generates a totally unique ID for each cloned instance in the marquee.
@@ -48,10 +50,28 @@ const Hero = () => {
           </Marquee>
         </div>
 
-        {/* Bottom Right Text */}
-        <div className="pb-10 pr-6 md:pr-12 text-right flex flex-col gap-1">
-          <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Full-Stack Developer</h2>
-          <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Design Scalable Systems</h2>
+        {/* Bottom Section: Left CTA & Right Text */}
+        <div className="w-full pb-10 px-6 md:px-12 flex flex-col-reverse md:flex-row items-start md:items-end justify-between gap-8 pointer-events-auto">
+          
+          {/* Left CTA - Premium Animated Button */}
+          <RouterLink 
+            to="/start" 
+            className="group relative flex items-center gap-4 bg-white/[0.03] border border-white/10 backdrop-blur-xl text-white pl-8 pr-2 py-2 rounded-full text-base md:text-lg font-medium hover:bg-[#a1ebd4] hover:border-[#a1ebd4] hover:text-black hover:shadow-[0_0_30px_rgba(161,235,212,0.3)] transition-all duration-500 overflow-hidden"
+          >
+            {/* Shimmer Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+            
+            <span className="relative z-10 tracking-wide">Start a Project</span>
+            <div className="relative z-10 w-10 h-10 rounded-full bg-white/10 group-hover:bg-black/10 flex items-center justify-center transition-colors duration-500">
+              <Icon icon="lucide:arrow-up-right" className="w-5 h-5 group-hover:rotate-45 transition-transform duration-500" />
+            </div>
+          </RouterLink>
+
+          {/* Right Text */}
+          <div className="flex flex-col gap-1 text-left md:text-right pointer-events-none">
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Full-Stack Developer</h2>
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-white tracking-wide">Design Scalable Systems</h2>
+          </div>
         </div>
 
       </div>
