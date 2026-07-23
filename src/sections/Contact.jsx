@@ -138,7 +138,10 @@ const Contact = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center px-8 md:px-14 py-6 gap-2 text-xs text-black/40 font-light">
           <span>© {new Date().getFullYear()} Riadh Bellala. All rights reserved.</span>
-          <span>Built &amp; Designed by Riadh Vision</span>
+          <div className="flex items-center gap-4">
+            <a href="/admin/login" className="hover:text-black transition-colors">Admin Login</a>
+            <span>Built &amp; Designed by Riadh Vision</span>
+          </div>
         </div>
 
       </div>

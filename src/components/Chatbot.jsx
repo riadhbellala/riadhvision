@@ -263,7 +263,7 @@ const Chatbot = () => {
                           }),
                     }}
                   >
-                    <ReactMarkdown components={{ p: ({node, ...props}) => <p style={{margin: 0, color: 'white', fontSize: '14px', lineHeight: '1.6'}} {...props} />, ul: ({node, ...props}) => <ul style={{paddingLeft: '16px', margin: '6px 0'}} {...props} />, ol: ({node, ...props}) => <ol style={{paddingLeft: '16px', margin: '6px 0'}} {...props} />, li: ({node, ...props}) => <li style={{margin: '3px 0', fontSize: '14px', color: 'white'}} {...props} />, strong: ({node, ...props}) => <strong style={{color: 'white', fontWeight: 600}} {...props} /> }}>{msg.content}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: ({children, ...props}) => <p style={{margin: 0, color: 'white', fontSize: '14px', lineHeight: '1.6'}} {...props}>{children}</p>, ul: ({children, ...props}) => <ul style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ul>, ol: ({children, ...props}) => <ol style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ol>, li: ({children, ...props}) => <li style={{margin: '3px 0', fontSize: '14px', color: 'white'}} {...props}>{children}</li>, strong: ({children, ...props}) => <strong style={{color: 'white', fontWeight: 600}} {...props}>{children}</strong> }}>{msg.content}</ReactMarkdown>
                   </div>
                 </motion.div>
               ))}
