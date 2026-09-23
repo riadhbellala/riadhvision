@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion, useTransform, useScroll, useSpring } from "framer-motion";
 import { servicesData } from "../constants";
 import ServiceCard from "../components/ServiceCard";
@@ -52,7 +53,7 @@ const Services = () => {
       clearTimeout(timeout);
       resizeObserver.disconnect();
     };
-  }, [isDesktop, servicesData]);
+  }, [isDesktop]);
 
   const { scrollYProgress } = useScroll({
     target: targetRef,

@@ -81,6 +81,93 @@ export const servicesData = [
 export const projects = [
   {
     id: 1,
+    name: "FrigoClimat — Commercial Refrigeration & Fitout",
+    slug: "frigoclimat",
+    year: "2025",
+    role: "Frontend Developer",
+    description:
+      "A premium website for a French commercial refrigeration and shop-fitting specialist, showcasing their expertise in custom bakery, butchery, and restaurant equipment.",
+    longDescription:
+      "FrigoClimat (FCS) is a specialist in commercial refrigeration, custom shop-fitting, and professional kitchen equipment based in Île-de-France. The website was built to reflect over 20 years of expertise, presenting their services — from custom refrigerated display cases to full bakery and butchery fit-outs — in an elegant and accessible digital presence. The site features smooth animations, a projects gallery, and a structured service catalog optimized for local SEO.",
+    highlights: [
+      "Cinematic hero section with scroll-reveal animations",
+      "Structured service catalog covering 7 professional trades",
+      "Scrolling client and partner marquee showcasing 30+ brands",
+      "Fully SEO-optimized with structured data and local business schema",
+    ],
+    href: "https://www.frigoclimat.fr/",
+    image: "/assets/projects/frigoclimat.webp",
+    bgImage: "/assets/projects/frigoclimat.webp",
+    frameworks: [
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Framer Motion" },
+      { id: 4, name: "SEO" },
+    ],
+  },
+  {
+    id: "pikbox",
+    name: "PiKBOX® — Branding Agency Website",
+    slug: "pikbox",
+    year: "2025",
+    role: "Full-Stack Developer",
+    description:
+      "A full-featured agency website for Algeria's leading branding studio, with a dark cinematic aesthetic, multilingual support, and 4 specialized department pages.",
+    longDescription:
+      "PiKBOX® is Algeria's premier branding agency based in Batna, and this website was designed and built to match their bold, professional identity. The platform covers four distinct departments — BrandBox, PrintBox, SpaceBox, and E-Box — each with dedicated service pages. It features a dark, glassmorphic aesthetic, a dynamic portfolio section, a multilingual architecture (French, English, Arabic), and a client portal login. The site is built to convert visitors into clients, showcasing 60+ brand partnerships.",
+    highlights: [
+      "4-department architecture with dedicated service pages",
+      "Multilingual support for French, English, and Arabic (RTL)",
+      "Dynamic portfolio with client logo marquee and case studies",
+      "Dark glassmorphic UI with cinematic scroll animations",
+    ],
+    href: "https://www.pikboxpro.com/",
+    image: "/assets/projects/pikbox.webp",
+    bgImage: "/assets/projects/pikbox.webp",
+    frameworks: [
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Multilingual" },
+      { id: 4, name: "Branding" },
+    ],
+  },
+  {
+    id: 0,
+    name: "Drivo — Multi-Tenant Car Rental SaaS",
+    slug: "drivo",
+    year: "2026",
+    role: "Full-Stack Developer",
+    description:
+      "A multi-tenant SaaS platform and desktop management app built for car rental agencies, featuring automated billing and contract generation.",
+    longDescription:
+      "Drivo is a comprehensive multi-tenant SaaS solution designed specifically for car rental agencies. It provides a powerful desktop management app for day-to-day operations, including vehicle tracking, bookings, and walk-in customer management. The platform features an automated billing and subscription enforcement system, multi-role access control, and instant native French rental contract generation, all backed by a robust and scalable architecture.",
+    highlights: [
+      "Desktop management app built with Electron and React",
+      "Multi-tenant backend architecture with Supabase",
+      "Automated subscription and billing enforcement system",
+      "Instant native French rental contract generation",
+    ],
+    href: "#",
+    image: "/assets/projects/drivo-pics/projectpic1.webp",
+    bgImage: "/assets/projects/drivo-pics/projectpic1.webp",
+    gallery: [
+      "/assets/projects/drivo-pics/projectpic1.webp",
+      "/assets/projects/drivo-pics/pic2.webp",
+      "/assets/projects/drivo-pics/pic3.webp",
+      "/assets/projects/drivo-pics/pic4.webp",
+      "/assets/projects/drivo-pics/pic5.webp",
+      "/assets/projects/drivo-pics/pic6.webp",
+    ],
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Electron" },
+      { id: 3, name: "Node.js" },
+      { id: 4, name: "Supabase" },
+    ],
+  },
+  {
+
+    id: 1,
     name: "Athléte — Sports E-commerce Platform",
     slug: "athlete",
     year: "2024",
@@ -122,8 +209,8 @@ export const projects = [
       "Optimized for fast loading with minimal asset footprint",
     ],
     href: "https://hydrame-theta.vercel.app/",
-    image: "/assets/projects/hydrame.png",
-    bgImage: "/assets/projects/hydrame.png",
+    image: "/assets/projects/hydrame.webp",
+    bgImage: "/assets/projects/hydrame.webp",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Vite" },
@@ -183,32 +270,7 @@ export const projects = [
       { id: 4, name: "E-commerce" },
     ],
   },
-  {
-    id: 5,
-    name: "Dopamine — Coffee Brand Experience",
-    slug: "dopamine",
-    year: "2024",
-    role: "Full-Stack Developer",
-    description:
-      "A specialty coffee brand with a cinematic UI, interactive menu, order management, and a full checkout flow.",
-    longDescription:
-      "Dopamine is a specialty coffee brand digital experience designed to mirror the pleasure of a perfect cup. The platform features a rich, interactive menu system, a fully functional order and cart management system, and a checkout flow with animated transitions. GSAP-powered animations elevate every scroll and interaction into a sensory experience that reinforces the brand's identity.",
-    highlights: [
-      "GSAP & Framer Motion powered cinematic scroll animations",
-      "Interactive menu with categories, filtering, and modals",
-      "Full cart and checkout flow with order summary",
-      "Dark, mood-setting UI that reinforces the brand identity",
-    ],
-    href: "https://dopamine-lemon.vercel.app/",
-    image: "/assets/projects/dompaine.webp",
-    bgImage: "/assets/projects/dompaine.webp",
-    frameworks: [
-      { id: 1, name: "React" },
-      { id: 2, name: "Framer Motion" },
-      { id: 3, name: "GSAP" },
-      { id: 4, name: "Tailwind CSS" },
-    ],
-  },
+
   {
     id: 6,
     name: "TriageFlow — Hospital Triage Dashboard",

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import ReactMarkdown from 'react-markdown';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import Robot from "./Robot";

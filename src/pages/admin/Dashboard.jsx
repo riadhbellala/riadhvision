@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -60,7 +61,7 @@ const Dashboard = () => {
       {/* ─────────────────────────────────────────
           SIDEBAR
       ───────────────────────────────────────── */}
-      <aside className="w-60 flex-shrink-0 bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col h-full">
+      <aside className="w-60 shrink-0 bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col h-full">
 
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 h-14 border-b border-[#1a1a1a]">
@@ -124,7 +125,7 @@ const Dashboard = () => {
       <main className="flex-1 flex flex-col overflow-hidden">
 
         {/* Top bar */}
-        <header className="h-14 border-b border-[#1a1a1a] flex items-center justify-between px-6 flex-shrink-0 bg-[#0a0a0a]">
+        <header className="h-14 border-b border-[#1a1a1a] flex items-center justify-between px-6 shrink-0 bg-[#0a0a0a]">
           <div>
             <h1 className="text-[14px] font-semibold text-white">Dashboard</h1>
           </div>
@@ -158,7 +159,7 @@ const Dashboard = () => {
               { label: 'Total Requests', value: stats.total, delta: null, icon: 'lucide:users' },
               { label: 'New This Week', value: stats.thisWeek, delta: null, icon: 'lucide:trending-up' },
               { label: 'Pending Review', value: stats.pending, delta: null, icon: 'lucide:clock' },
-            ].map((s, i) => (
+            ].map((s) => (
               <div key={s.label} className="bg-[#0f0f0f] border border-[#1a1a1a] rounded-xl p-5">
                 <div className="flex items-start justify-between mb-4">
                   <p className="text-[12px] font-medium text-[#666]">{s.label}</p>
@@ -176,13 +177,13 @@ const Dashboard = () => {
 
             {/* Table */}
             <div className="flex-1 bg-[#0f0f0f] border border-[#1a1a1a] rounded-xl overflow-hidden flex flex-col min-h-0">
-              <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#1a1a1a] flex-shrink-0">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#1a1a1a] shrink-0">
                 <p className="text-[13px] font-semibold text-white">Project Requests</p>
                 <p className="text-[12px] text-[#555]">{filtered.length} records</p>
               </div>
 
               {/* Table Head */}
-              <div className="grid text-[11px] font-semibold uppercase tracking-wider text-[#555] px-5 py-2.5 border-b border-[#1a1a1a] flex-shrink-0"
+              <div className="grid text-[11px] font-semibold uppercase tracking-wider text-[#555] px-5 py-2.5 border-b border-[#1a1a1a] shrink-0"
                 style={{ gridTemplateColumns: '1.5fr 1.8fr 1fr 1fr 0.9fr 80px' }}>
                 <span>Client</span>
                 <span>Email</span>
@@ -230,7 +231,7 @@ const Dashboard = () => {
             </div>
 
             {/* Detail Panel */}
-            <div className="w-72 flex-shrink-0">
+            <div className="w-72 shrink-0">
               <AnimatePresence mode="wait">
                 {selectedRequest ? (
                   <motion.div

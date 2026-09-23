@@ -1,3 +1,4 @@
+/* global process */
 const PORTFOLIO_CONTEXT = `# Portfolio Context: Briefing Document
 
 Hello! If you're a new assistant helping me with my portfolio or projects, this document contains everything you need to know about me, what I do, and how I work.

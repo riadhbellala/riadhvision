@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "../constants";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -98,7 +99,7 @@ const ProjectDetails = () => {
         variants={fadeUp} initial="hidden" animate="visible" custom={3}
         className="w-full max-w-7xl px-6 md:px-12 mb-16"
       >
-        <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-white/10 group">
+        <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 group">
           <img
             src={project.image}
             alt={project.name}
