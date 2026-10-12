@@ -80,6 +80,33 @@ export const servicesData = [
 
 export const projects = [
   {
+    id: "yashome",
+    name: "YasHome — Real Estate Platform",
+    slug: "yashome",
+    year: "2025",
+    role: "Collaborator",
+    description:
+      "Algeria's premier real estate promotion platform — browse apartments, villas, and exclusive property projects with a modern, bilingual digital experience.",
+    longDescription:
+      "YasHome is Algeria's first dedicated real estate promotion platform, built to connect buyers with top-tier residential projects across the country. The platform features a curated property listing system, project showcase pages, and an immersive browsing experience in both French and Arabic. Every detail of the UI was designed to build trust and guide prospects through the discovery and contact journey, with smooth animations and a clean, premium aesthetic.",
+    highlights: [
+      "Curated property and project listing system",
+      "Bilingual interface supporting French and Arabic",
+      "Immersive project showcase pages with rich media",
+      "SEO-optimized for the Algerian real estate market",
+    ],
+    href: "https://yas-home.com/fr",
+    image: "/assets/projects/yas-home.com_fr.webp",
+    bgImage: "/assets/projects/yas-home.com_fr.webp",
+    frameworks: [
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Bilingual" },
+      { id: 4, name: "Real Estate" },
+    ],
+  },
+  {
+
     id: 1,
     name: "FrigoClimat — Commercial Refrigeration & Fitout",
     slug: "frigoclimat",
@@ -103,6 +130,32 @@ export const projects = [
       { id: 2, name: "Tailwind CSS" },
       { id: 3, name: "Framer Motion" },
       { id: 4, name: "SEO" },
+    ],
+  },
+  {
+    id: "batioil",
+    name: "Batioil — Premium Lubricants Brand",
+    slug: "batioil",
+    year: "2025",
+    role: "Full-Stack Developer",
+    description:
+      "A multilingual product catalog website for an Algerian premium engine oil brand, covering 6 vehicle categories from motorcycles to heavy industry.",
+    longDescription:
+      "Batioil is an Algerian lubricants brand backed by over 60 years of Turkish lubrication expertise, delivering certified engine oils for motorcycles, cars, trucks, heavy engines, factory equipment, and maritime applications. The website was built as a full multilingual product catalog (French, English, Arabic) with cinematic hero sections, a structured category grid, an interactive best-sellers slider, and an enterprise company page — all designed to position Batioil as a trusted, premium brand in the industrial market.",
+    highlights: [
+      "Full multilingual catalog in French, English, and Arabic",
+      "6 product categories with dedicated landing pages",
+      "Interactive best-sellers slider with technical specs",
+      "Cinematic hero with animated product showcase",
+    ],
+    href: "https://batioil.com/en",
+    image: "/assets/projects/batioil.com_en.webp",
+    bgImage: "/assets/projects/batioil.com_en.webp",
+    frameworks: [
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Multilingual" },
+      { id: 4, name: "E-commerce" },
     ],
   },
   {
