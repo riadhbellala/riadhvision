@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ReactLenis from "lenis/react";
+import ReactLenis, { useLenis } from "lenis/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Home from "./pages/Home";
 import ProjectDetails from "./pages/ProjectDetails";
@@ -11,9 +13,31 @@ import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const App = () => {
+  const lenisRef = useRef(null);
+
+  // Keep ScrollTrigger in step with Lenis' smoothed scroll position.
+  useLenis(ScrollTrigger.update);
+
+  // Drive Lenis from GSAP's ticker so both run on a single animation loop.
+  // The instance is read lazily because ReactLenis creates it after mount.
+  useEffect(() => {
+    const update = (time) => lenisRef.current?.lenis?.raf(time * 1000);
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0);
+    return () => gsap.ticker.remove(update);
+  }, []);
+
   return (
-    <ReactLenis root className="relative w-screen min-h-screen overflow-x-hidden" style={{ position: "relative" }}>
+    <ReactLenis
+      root
+      ref={lenisRef}
+      options={{ autoRaf: false }}
+      className="relative w-screen min-h-screen overflow-x-hidden"
+      style={{ position: "relative" }}
+    >
       <div className="min-h-screen">
         <Router>
           <ScrollToTop />

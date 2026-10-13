@@ -5,6 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import Robot from "./Robot";
 
+// ── Design tokens (see DESIGN_SYSTEM.md) ─────────────────────────────────────
+const NAVY = "var(--color-navy)";
+const BASE = "var(--color-base)";
+const ACCENT = "var(--color-accent)";
+const navy = (pct) => `color-mix(in srgb, var(--color-navy) ${pct}%, transparent)`;
+const base = (pct) => `color-mix(in srgb, var(--color-base) ${pct}%, transparent)`;
+
 // ── Icons ────────────────────────────────────────────────────────────────────
 const RobotIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -41,7 +48,7 @@ const TypingIndicator = () => (
           width: "6px",
           height: "6px",
           borderRadius: "50%",
-          background: "rgba(44, 85, 132, 0.8)",
+          background: navy(50),
         }}
         animate={{ opacity: [0.3, 1, 0.3], y: [0, -4, 0] }}
         transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
@@ -141,11 +148,11 @@ const Chatbot = () => {
               width: isMobile ? "100%" : "420px",
               height: isMobile ? "100dvh" : "600px",
               maxHeight: isMobile ? "100dvh" : "800px",
-              background: isMobile ? "rgba(8, 8, 8, 0.95)" : "rgba(8, 8, 8, 0.75)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: isMobile ? "none" : "1px solid rgba(44, 85, 132, 0.3)",
-              boxShadow: "0 0 40px rgba(44, 85, 132, 0.15)",
+              background: isMobile ? base(95) : base(90),
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: isMobile ? "none" : `1px solid ${navy(10)}`,
+              boxShadow: "var(--shadow-lg)",
               borderRadius: isMobile ? "0px" : "16px",
               display: "flex",
               flexDirection: "column",
@@ -158,7 +165,7 @@ const Chatbot = () => {
             <div
               style={{
                 padding: "16px 20px",
-                borderBottom: "1px solid rgba(44, 85, 132, 0.2)",
+                borderBottom: `1px solid ${navy(10)}`,
                 display: "flex",
                 alignItems: "center",
                 gap: "10px",
@@ -170,12 +177,12 @@ const Chatbot = () => {
                     width: "36px",
                     height: "36px",
                     borderRadius: "50%",
-                    background: "rgba(44, 85, 132, 0.25)",
-                    border: "1px solid rgba(44, 85, 132, 0.5)",
+                    background: navy(4),
+                    border: `1px solid ${navy(10)}`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "rgba(44, 85, 132, 1)",
+                    color: NAVY,
                   }}
                 >
                   <RobotIcon />
@@ -189,16 +196,17 @@ const Chatbot = () => {
                     width: "9px",
                     height: "9px",
                     borderRadius: "50%",
-                    background: "#22c55e",
-                    border: "2px solid #080808",
+                    background: ACCENT,
+                    border: `2px solid ${BASE}`,
+                    boxShadow: `0 0 0 1px ${navy(30)}`,
                   }}
                 />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, color: "#ffffff", fontSize: "14px", fontWeight: "600", letterSpacing: "0.01em" }}>
+                <p style={{ margin: 0, color: NAVY, fontSize: "14px", fontWeight: "600", letterSpacing: "0.01em" }}>
                   Riadh's Assistant
                 </p>
-                <p style={{ margin: 0, color: "rgba(255,255,255,0.4)", fontSize: "11px", letterSpacing: "0.05em", marginTop: "1px" }}>
+                <p style={{ margin: 0, color: navy(70), fontSize: "11px", letterSpacing: "0.05em", marginTop: "1px" }}>
                   Ask me anything
                 </p>
               </div>
@@ -207,7 +215,7 @@ const Chatbot = () => {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "rgba(255,255,255,0.5)",
+                  color: navy(70),
                   cursor: "pointer",
                   padding: "4px",
                   display: "flex",
@@ -230,7 +238,7 @@ const Chatbot = () => {
                 flexDirection: "column",
                 gap: "10px",
                 scrollbarWidth: "thin",
-                scrollbarColor: "rgba(44, 85, 132, 0.3) transparent",
+                scrollbarColor: `${navy(15)} transparent`,
               }}
             >
               {messages.map((msg, i) => (
@@ -250,21 +258,22 @@ const Chatbot = () => {
                       padding: "10px 14px",
                       fontSize: "14px",
                       lineHeight: "1.5",
-                      color: "#ffffff",
                       ...(msg.role === "user"
                         ? {
-                            background: "rgba(44, 85, 132, 0.4)",
-                            border: "1px solid rgba(44, 85, 132, 0.5)",
+                            color: BASE,
+                            background: NAVY,
+                            border: `1px solid ${NAVY}`,
                             borderRadius: "12px 12px 2px 12px",
                           }
                         : {
-                            background: "rgba(255, 255, 255, 0.05)",
-                            border: "1px solid rgba(255, 255, 255, 0.08)",
+                            color: navy(80),
+                            background: navy(4),
+                            border: `1px solid ${navy(10)}`,
                             borderRadius: "12px 12px 12px 2px",
                           }),
                     }}
                   >
-                    <ReactMarkdown components={{ p: ({children, ...props}) => <p style={{margin: 0, color: 'white', fontSize: '14px', lineHeight: '1.6'}} {...props}>{children}</p>, ul: ({children, ...props}) => <ul style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ul>, ol: ({children, ...props}) => <ol style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ol>, li: ({children, ...props}) => <li style={{margin: '3px 0', fontSize: '14px', color: 'white'}} {...props}>{children}</li>, strong: ({children, ...props}) => <strong style={{color: 'white', fontWeight: 600}} {...props}>{children}</strong> }}>{msg.content}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: ({children, ...props}) => <p style={{margin: 0, color: 'inherit', fontSize: '14px', lineHeight: '1.6'}} {...props}>{children}</p>, ul: ({children, ...props}) => <ul style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ul>, ol: ({children, ...props}) => <ol style={{paddingLeft: '16px', margin: '6px 0'}} {...props}>{children}</ol>, li: ({children, ...props}) => <li style={{margin: '3px 0', fontSize: '14px', color: 'inherit'}} {...props}>{children}</li>, strong: ({children, ...props}) => <strong style={{color: msg.role === 'user' ? 'inherit' : NAVY, fontWeight: 600}} {...props}>{children}</strong> }}>{msg.content}</ReactMarkdown>
                   </div>
                 </motion.div>
               ))}
@@ -282,11 +291,11 @@ const Chatbot = () => {
                       key={idx}
                       onClick={() => sendMessage(suggestion)}
                       style={{
-                        background: "rgba(44, 85, 132, 0.15)",
-                        border: "1px solid rgba(44, 85, 132, 0.4)",
+                        background: BASE,
+                        border: `1px solid ${navy(15)}`,
                         borderRadius: "20px",
                         padding: "6px 12px",
-                        color: "#a1ebd4",
+                        color: navy(80),
                         fontSize: "12px",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
@@ -294,12 +303,12 @@ const Chatbot = () => {
                         whiteSpace: "nowrap"
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(44, 85, 132, 0.3)";
-                        e.currentTarget.style.borderColor = "rgba(44, 85, 132, 0.6)";
+                        e.currentTarget.style.background = navy(4);
+                        e.currentTarget.style.borderColor = navy(30);
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "rgba(44, 85, 132, 0.15)";
-                        e.currentTarget.style.borderColor = "rgba(44, 85, 132, 0.4)";
+                        e.currentTarget.style.background = BASE;
+                        e.currentTarget.style.borderColor = navy(15);
                       }}
                     >
                       {suggestion}
@@ -321,8 +330,8 @@ const Chatbot = () => {
                   >
                     <div
                       style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.08)",
+                        background: navy(4),
+                        border: `1px solid ${navy(10)}`,
                         borderRadius: "12px 12px 12px 2px",
                       }}
                     >
@@ -339,7 +348,7 @@ const Chatbot = () => {
             <div
               style={{
                 padding: "12px 16px",
-                borderTop: "1px solid rgba(44, 85, 132, 0.2)",
+                borderTop: `1px solid ${navy(10)}`,
                 display: "flex",
                 gap: "8px",
                 alignItems: "center",
@@ -354,16 +363,16 @@ const Chatbot = () => {
                 onBlur={() => setIsFocused(false)}
                 placeholder="Type a message..."
                 disabled={isLoading}
+                className="placeholder:text-navy/70"
                 style={{
                   flex: 1,
                   padding: "9px 14px",
-                  background: "rgba(255, 255, 255, 0.04)",
-                  backdropFilter: "blur(8px)",
+                  background: BASE,
                   border: isFocused
-                    ? "1px solid rgba(44, 85, 132, 0.8)"
-                    : "1px solid rgba(255, 255, 255, 0.08)",
+                    ? `1px solid ${NAVY}`
+                    : `1px solid ${navy(15)}`,
                   borderRadius: "8px",
-                  color: "#ffffff",
+                  color: NAVY,
                   fontSize: "16px", // 16px strictly prevents iOS zoom bug
                   outline: "none",
                   transition: "border-color 0.2s ease",
@@ -385,17 +394,13 @@ const Chatbot = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#ffffff",
-                  transition: "background 0.2s ease, box-shadow 0.2s ease",
+                  color: BASE,
+                  transition: "background 0.2s ease",
                   background: isSendDisabled
-                    ? "rgba(44, 85, 132, 0.2)"
+                    ? navy(30)
                     : isHoveringSend
-                    ? "rgba(44, 85, 132, 0.9)"
-                    : "rgba(44, 85, 132, 0.6)",
-                  boxShadow:
-                    !isSendDisabled && isHoveringSend
-                      ? "0 0 16px rgba(44, 85, 132, 0.6)"
-                      : "none",
+                    ? navy(90)
+                    : NAVY,
                   flexShrink: 0,
                 }}
               >
@@ -418,17 +423,16 @@ const Chatbot = () => {
               position: "fixed",
               bottom: isMobile ? "32px" : "48px",
               right: isMobile ? "130px" : "140px",
-              background: "rgba(44, 85, 132, 0.75)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
+              background: NAVY,
               padding: "10px 16px",
               borderRadius: "16px 16px 4px 16px",
-              border: "1px solid rgba(44, 85, 132, 0.4)",
-              color: "#fff",
+              // Faint light edge keeps the bubble visible over navy sections too
+              border: `1px solid ${base(15)}`,
+              color: BASE,
               fontSize: "13px",
               pointerEvents: "none",
               zIndex: 9999,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+              boxShadow: "var(--shadow-md)",
               whiteSpace: "nowrap",
               fontFamily: "inherit"
             }}
@@ -452,18 +456,18 @@ const Chatbot = () => {
           width: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
           height: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
           borderRadius: "50%",
-          border: isOpen ? "1px solid rgba(44, 85, 132, 0.6)" : "none",
-          background: isOpen ? "rgba(44, 85, 132, 0.15)" : "transparent",
+          border: isOpen ? `1px solid ${navy(10)}` : "none",
+          background: isOpen ? base(90) : "transparent",
           backdropFilter: isOpen ? "blur(12px)" : "none",
           WebkitBackdropFilter: isOpen ? "blur(12px)" : "none",
           boxShadow: isOpen && isHoveringButton
-            ? "0 0 30px rgba(44, 85, 132, 0.6)"
-            : isOpen ? "0 0 20px rgba(44, 85, 132, 0.4)" : "none",
+            ? "var(--shadow-lg)"
+            : isOpen ? "var(--shadow-md)" : "none",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#ffffff",
+          color: NAVY,
           zIndex: 9999,
           outline: "none",
           transition: "box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease",

@@ -89,13 +89,13 @@ const Navbar = () => {
       {/* FULLSCREEN MOBILE OVERLAY MENU (Kept for mobile devices) */}
       <nav
         ref={navRef}
-        className="fixed z-50 flex flex-col justify-between w-full h-full px-6 md:px-10 uppercase bg-black text-white/80 py-28 gap-y-10 md:hidden"
+        className="fixed z-50 flex flex-col justify-between w-full h-full px-6 md:px-10 uppercase bg-base text-navy/80 py-28 gap-y-10 md:hidden"
       >
         <div className="flex flex-col text-4xl gap-y-2">
           {["home", "work", "services", "contact"].map((section, index) => (
             <div key={index} ref={(el) => (linksRef.current[index] = el)}>
               <Link
-                className="transition-all duration-700 cursor-pointer hover:text-white hover:tracking-[0.5rem] ease-in-out hover:font-bold"
+                className="transition-all duration-700 cursor-pointer hover:text-navy hover:tracking-[0.5rem] ease-in-out hover:font-bold"
                 to={section}
                 smooth
                 onClick={toggleMenu}
@@ -107,8 +107,8 @@ const Navbar = () => {
         </div>
         <div ref={contactRef} className="flex flex-col gap-8 font-light">
           <div>
-            <p className="tracking-wider text-white/50">E-mail</p>
-            <p className="text-xl tracking-widest lowercase text-pretty">riadh5726@gmail.com</p>
+            <p className="tracking-wider text-navy/70">E-mail</p>
+            <p className="text-xl tracking-widest lowercase text-pretty text-navy">riadh5726@gmail.com</p>
           </div>
         </div>
       </nav>
@@ -117,11 +117,11 @@ const Navbar = () => {
       <div 
         className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-6xl transition-all duration-500"
       >
-        <div className="flex items-center justify-between px-6 md:px-10 py-3.5 bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_4px_32px_rgba(0,0,0,0.3)] rounded-full">
+        <div className="flex items-center justify-between px-6 md:px-10 py-3.5 bg-base/80 backdrop-blur-md border border-navy/10 shadow-sm rounded-full">
 
           {/* Left: Expandable Logo */}
           <div 
-            className="flex items-center cursor-pointer font-bold text-lg tracking-widest text-white uppercase select-none"
+            className="flex items-center cursor-pointer font-bold text-lg tracking-widest text-navy uppercase select-none"
             onMouseEnter={() => setIsLogoHovered(true)}
             onMouseLeave={() => setIsLogoHovered(false)}
           >
@@ -140,14 +140,14 @@ const Navbar = () => {
           </div>
 
           {/* Center: Desktop Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/80">
-            <Link to="work" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors flex items-center gap-1">
-              Works <span className="text-white/40">+</span>
+          <div className="hidden md:flex items-center gap-8 text-small text-navy/70">
+            <Link to="work" smooth duration={1000} className="cursor-pointer hover:text-navy transition-colors duration-150 flex items-center gap-1">
+              Works <span aria-hidden>+</span>
             </Link>
-            <Link to="services" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors flex items-center gap-1">
-              Services <span className="text-white/40">+</span>
+            <Link to="services" smooth duration={1000} className="cursor-pointer hover:text-navy transition-colors duration-150 flex items-center gap-1">
+              Services <span aria-hidden>+</span>
             </Link>
-            <Link to="contact" smooth duration={1000} className="cursor-pointer hover:text-white transition-colors">
+            <Link to="contact" smooth duration={1000} className="cursor-pointer hover:text-navy transition-colors duration-150">
               Contact
             </Link>
           </div>
@@ -156,18 +156,18 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             <RouterLink 
               to="/start" 
-              className="hidden md:flex cursor-pointer items-center gap-2 bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-[#a1ebd4] transition-colors duration-300"
+              className="hidden md:flex cursor-pointer items-center gap-2 bg-navy text-base px-5 py-2 rounded-full text-small font-medium hover:bg-navy/90 transition-colors duration-150"
             >
               Start Project <Icon icon="lucide:arrow-up-right" className="w-4 h-4" />
             </RouterLink>
 
             {/* Mobile Hamburger */}
             <div
-              className="md:hidden flex flex-col items-center justify-center gap-1.5 cursor-pointer w-9 h-9 rounded-full bg-white/10 border border-white/20"
+              className="md:hidden flex flex-col items-center justify-center gap-1.5 cursor-pointer w-9 h-9 rounded-full bg-base border border-navy/10"
               onClick={toggleMenu}
             >
-              <span ref={topLineRef} className="block w-4 h-0.5 bg-white rounded-full origin-center"></span>
-              <span ref={bottomLineRef} className="block w-4 h-0.5 bg-white rounded-full origin-center"></span>
+              <span ref={topLineRef} className="block w-4 h-0.5 bg-navy rounded-full origin-center"></span>
+              <span ref={bottomLineRef} className="block w-4 h-0.5 bg-navy rounded-full origin-center"></span>
             </div>
           </div>
 

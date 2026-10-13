@@ -1,17 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Marquee from "react-fast-marquee";
-import { Link as RouterLink } from "react-router-dom";
-import { Link as ScrollLink } from "react-scroll";
+import { useNavigate } from "react-router-dom";
+import { useLenis } from "lenis/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 // eslint-disable-next-line no-unused-vars
 import { motion, animate, useMotionValue, useTransform, useReducedMotion } from "framer-motion";
+import { GROOVE_WIDTH as GROOVE, groove, ARC_RADII, ARC_FADE_MASK } from "../lib/groove";
+import TicketButton from "../components/TicketButton";
 
 // --- Responsive geometry --------------------------------------------------------
 // Arc apex positions and tile sizes per breakpoint, as CSS variables on the hero.
 // Pure CSS, so it applies instantly with no resize listeners or layout flicker.
 // md uses 11vw (not 9vw): on tall tablet viewports a 9vw arc pushes tiles
 // partly off-screen at the edges of the visible band.
-// The 1280–1599 tier is pulled in from 27vw to 22vw: at 1280–1440 a 27vw arc
+// The 1280–1599 tier is pulled in from 27vw to 21vw: at 1280–1440 a 27vw arc
 // would run tiles into the headline; 27vw only clears it (24px+) from ~1600px.
 const heroStyles = `
   .hero-geo {
@@ -21,10 +23,6 @@ const heroStyles = `
     --tile-size: 52px;
     --tile-icon: 20px;
     --tile-radius: 11px;
-    --hero-h1-max: 3.9rem;
-  }
-  @media (min-width: 768px) and (max-width: 1023.98px) {
-    .hero-geo { --hero-h1-max: 3.25rem; }
   }
   @media (min-width: 1024px) {
     .hero-geo {
@@ -38,7 +36,7 @@ const heroStyles = `
   }
   @media (min-width: 1280px) {
     .hero-geo {
-      --arc-inner-x: 22vw;
+      --arc-inner-x: 21vw;
       --arc-middle-x: 13vw;
       --arc-outer-x: 4vw;
       --tile-size: 72px;
@@ -59,12 +57,11 @@ const heroStyles = `
 // Each arc is a circle whose centre sits off-screen; `xVar` holds where its
 // apex (rightmost point on the left side) lands in the viewport.
 const arcs = [
-  { id: "outer", radius: 125, xVar: "--arc-outer-x" },
-  { id: "middle", radius: 115, xVar: "--arc-middle-x" },
-  { id: "inner", radius: 105, xVar: "--arc-inner-x" },
+  { id: "outer", radius: ARC_RADII.outer, xVar: "--arc-outer-x" },
+  { id: "middle", radius: ARC_RADII.middle, xVar: "--arc-middle-x" },
+  { id: "inner", radius: ARC_RADII.inner, xVar: "--arc-inner-x" },
 ];
 const INNER = arcs[2];
-const GROOVE = 10;
 
 const circleBox = ({ radius, xVar }, side) => ({
   width: `${radius * 2}vh`,
@@ -73,20 +70,16 @@ const circleBox = ({ radius, xVar }, side) => ({
   [side]: `calc(var(${xVar}) - ${radius * 2}vh)`,
 });
 
-const Arc = ({ arc, side }) => (
+export const Arc = ({ arc, side }) => (
   <div
+    data-arc={arc.id}
+    data-side={side}
     className="absolute rounded-full"
-    style={{
-      ...circleBox(arc, side),
-      border: `${GROOVE}px solid rgba(255,255,255,0.02)`,
-    }}
+    style={{ ...circleBox(arc, side), border: `${GROOVE}px solid ${groove.light.band}` }}
   >
-    {/* Inner and outer edges of the carved channel (tuned for the flat #050505 background) */}
-    <div className="absolute inset-0 rounded-full border border-white/[0.06]" />
-    <div
-      className="absolute rounded-full border border-white/[0.028]"
-      style={{ inset: -GROOVE }}
-    />
+    {/* Inner and outer edges of the carved channel */}
+    <div className="absolute inset-0 rounded-full" style={{ border: `1px solid ${groove.light.inner}` }} />
+    <div className="absolute rounded-full" style={{ inset: -GROOVE, border: `1px solid ${groove.light.outer}` }} />
   </div>
 );
 
@@ -126,20 +119,17 @@ const ArcTile = ({ icon, side, index, count, progress }) => {
         }}
       >
         <motion.div
-          className="w-[var(--tile-size)] h-[var(--tile-size)] rounded-[var(--tile-radius)] bg-[#111111] border border-white/[0.06] flex items-center justify-center"
-          style={{
-            rotate: counter,
-            boxShadow: "0 18px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)",
-          }}
+          className="w-[var(--tile-size)] h-[var(--tile-size)] rounded-[var(--tile-radius)] bg-base border border-navy/10 shadow-md flex items-center justify-center"
+          style={{ rotate: counter }}
         >
           <Icon
             icon={icon}
             width="1em"
             height="1em"
+            className="text-navy/25"
             style={{
               fontSize: "var(--tile-icon)",
-              color: "rgba(255,255,255,0.16)",
-              filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.07)) drop-shadow(0 -1px 0 rgba(0,0,0,0.9))",
+              filter: "drop-shadow(0 1px 0 rgba(244,248,251,0.9)) drop-shadow(0 -1px 0 rgba(0,49,82,0.12))",
             }}
           />
         </motion.div>
@@ -165,7 +155,7 @@ const TechLogo = ({ tech }) => (
     height={22}
     role="img"
     aria-label={tech.name}
-    className="shrink-0 text-white/35 hover:text-white/70 transition-colors duration-300"
+    className="shrink-0 text-navy/35 hover:text-navy/80 transition-colors duration-300"
   />
 );
 
@@ -178,17 +168,59 @@ const fadeUp = {
   hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
-const drawIn = {
-  initial: { pathLength: 0 },
-  animate: { pathLength: 1 },
-  transition: { duration: 0.8, delay: 0.8, ease: "easeInOut" },
-};
 
-const arcMask = "linear-gradient(transparent, black 15%, black 85%, transparent)";
+const arcMask = ARC_FADE_MASK;
 const tileMask = "linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)";
+
+// Px value of a CSS length set in px or vw (the hero geometry variables).
+const cssPx = (el, name) => {
+  const v = getComputedStyle(el).getPropertyValue(name).trim();
+  return v.endsWith("vw") ? (parseFloat(v) * window.innerWidth) / 100 : parseFloat(v);
+};
 
 const Hero = () => {
   const reduceMotion = useReducedMotion();
+  const lenis = useLenis();
+  const navigate = useNavigate();
+  const heroRef = useRef(null);
+  const subtextRef = useRef(null);
+  const proofRef = useRef(null);
+  const headlineRef = useRef(null);
+  const businessesRef = useRef(null);
+  const [routeLayer, setRouteLayer] = useState(null);
+
+  const handleViewWork = (e) => {
+    e.preventDefault();
+    if (lenis) lenis.scrollTo("#work", { offset: -110 });
+    else document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleStartProject = () => navigate("/start");
+
+  // Anchors for the ticket's flight route (viewport coords): it ends 16px right
+  // of "businesses" and must keep 16px clear of the subtext, the headline
+  // letters and the right-hand tile track.
+  const getRouteAnchors = () => {
+    const hero = heroRef.current;
+    if (!hero || !subtextRef.current || !headlineRef.current || !businessesRef.current) return null;
+    const heroBox = hero.getBoundingClientRect();
+    const tileSize = cssPx(hero, "--tile-size");
+    // Tiles ride the inner arc; its apex is the track's innermost point.
+    // Half-extent of a tile tilted 8°: size/2 × (cos 8° + sin 8°) ≈ 0.57 × size.
+    const trackLeft = heroBox.right - cssPx(hero, "--arc-inner-x") + GROOVE / 2 - tileSize * 0.57;
+    const word = businessesRef.current.getBoundingClientRect();
+    const subtext = subtextRef.current.getBoundingClientRect();
+    // The headline's actual letter boxes, line by line.
+    const range = document.createRange();
+    range.selectNodeContents(headlineRef.current);
+    const letters = [...range.getClientRects()].filter((r) => r.width > 0 && r.height > 0);
+    return {
+      end: { x: word.right + 16, y: word.top + word.height / 2 },
+      subtext,
+      avoid: [subtext, ...letters],
+      maxRight: trackLeft - 16,
+    };
+  };
 
   // Shared conveyor clock (0 → 1). With reduced motion it stays put at a phase
   // where all four tiles per side sit inside the visible band.
@@ -209,8 +241,9 @@ const Hero = () => {
 
   return (
     <section
+      ref={heroRef}
       id="home"
-      className="hero-geo relative block md:flex md:items-center md:justify-center md:min-h-screen bg-transparent text-white overflow-hidden px-4 pt-32 pb-16 md:pt-48 md:pb-4"
+      className="hero-geo relative block md:flex md:items-center md:justify-center md:min-h-screen bg-transparent overflow-hidden px-4 pt-32 pb-16 md:pt-48 md:pb-4"
     >
       <style>{heroStyles}</style>
 
@@ -256,98 +289,73 @@ const Hero = () => {
         className="relative z-10 w-full max-w-[640px] md:max-w-[540px] lg:max-w-[640px] mx-auto text-center"
       >
         <motion.div variants={fadeUp} className="mb-6">
-          <span className="inline-block px-3 py-1.5 rounded-[4px] border border-dashed border-white/15 text-[11px] uppercase tracking-[0.2em] text-white/55">
+          <span className="inline-block px-3 py-1.5 rounded-xs border border-dashed border-navy/20 text-eyebrow text-navy/70">
             Full-Stack Developer
           </span>
         </motion.div>
 
         <motion.h1
+          ref={headlineRef}
           variants={fadeUp}
-          className="mb-5 font-amiamie text-white text-balance"
-          style={{
-            fontSize: "clamp(2.25rem, 5vw, var(--hero-h1-max))",
-            lineHeight: 1.05,
-            letterSpacing: "-0.035em",
-            fontWeight: 500,
-          }}
+          className="mb-5 text-display text-navy text-balance"
         >
           I build digital products
           <br className="hidden sm:block" />{" "}
-          that <span className="text-[#a1ebd4]">grow</span> businesses
+          that{" "}
+          <span className="relative inline-block isolate">
+            {/* Icy-blue highlighter behind the lower part of the word */}
+            <motion.span
+              aria-hidden
+              className="absolute inset-x-0 bottom-[0.08em] h-[45%] -mx-1 px-1 -z-10 rounded-xs bg-accent origin-left"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            />
+            grow
+          </span>{" "}
+          <span ref={businessesRef}>businesses</span>
         </motion.h1>
 
         <motion.p
+          ref={subtextRef}
           variants={fadeUp}
-          className="mb-8 mx-auto max-w-[500px] text-[16px] leading-[1.5] text-white/50 text-pretty"
+          className="mb-8 mx-auto max-w-[600px] text-body-lg text-navy/70 text-pretty"
         >
           From strategy and design to full-stack development, I turn ideas into fast, beautiful,
           conversion-focused web experiences.
         </motion.p>
 
-        <motion.div variants={fadeUp} className="flex items-start sm:items-center justify-center gap-3">
-          <div className="relative flex flex-col items-center">
-            <RouterLink
-              to="/start"
-              className="inline-flex items-center justify-center h-[44px] px-5 rounded-[8px] bg-[#a1ebd4] text-black text-[15px] font-medium transition-colors duration-200 hover:bg-[#8fdcc4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a1ebd4] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              Start a project
-            </RouterLink>
-
-            {/* Annotation, sm+: below-left of the button, arrow pointing up-right at its left edge */}
-            <div className="absolute top-[60%] right-[calc(100%+6px)] hidden sm:flex flex-col items-end gap-0.5 pointer-events-none select-none">
-              <svg viewBox="0 0 34 30" fill="none" aria-hidden className="shrink-0 w-[34px] h-[30px] mr-2">
-                <motion.path
-                  d="M4 28 C 6 17, 15 7, 31 3 M25 1 L31 3 L27 8"
-                  stroke="rgba(161,235,212,0.6)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  {...drawIn}
-                />
-              </svg>
-              <span className="font-caveat text-[17px] leading-none text-[#a1ebd4]/75 whitespace-nowrap">
-                Free consultation
-              </span>
-            </div>
-
-            {/* Annotation, below sm: centred under the button, arrowhead pointing straight up at it */}
-            <div className="sm:hidden mt-3 flex flex-col items-center gap-0.5 pointer-events-none select-none">
-              <svg viewBox="0 0 28 24" fill="none" aria-hidden className="w-[28px] h-[24px]">
-                <motion.path
-                  d="M7 22 C 6 15, 14 13, 14 3 M10 7 L14 3 L18 7"
-                  stroke="rgba(161,235,212,0.6)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  {...drawIn}
-                />
-              </svg>
-              <span className="font-caveat text-[16px] leading-none text-[#a1ebd4]/75 whitespace-nowrap">
-                Free consultation
-              </span>
-            </div>
-          </div>
-
-          <ScrollLink
-            to="work"
-            smooth
-            duration={1000}
+        {/* CTA: the boarding-pass ticket, centred; "View my work" is a quiet link
+            to its left on lg+ (the right side is where the flight route flies). */}
+        <motion.div
+          variants={fadeUp}
+          className="flex flex-col items-center gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-8"
+        >
+          <a
             href="#work"
-            className="cursor-pointer inline-flex items-center justify-center h-[44px] px-5 rounded-[8px] bg-white text-black text-[15px] font-medium transition-colors duration-200 hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a1ebd4] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            onClick={handleViewWork}
+            className="order-2 lg:order-none lg:justify-self-end whitespace-nowrap text-small text-navy/70 hover:text-navy hover:underline underline-offset-4 transition-colors duration-150"
           >
             View my work
-          </ScrollLink>
+          </a>
+          <TicketButton
+            className="order-1 lg:order-none"
+            onClick={handleStartProject}
+            getRouteAnchors={getRouteAnchors}
+            routeLayer={routeLayer}
+          />
+          <span aria-hidden className="hidden lg:block" />
         </motion.div>
 
         {/* Proof row: inset at md/lg so its dashed lines stay clear of the tiles,
             720px wide (breaking out of the 640px column) from xl up */}
-        <motion.div variants={fadeUp} className="mt-12 md:mt-24 md:mx-5 lg:mx-8 xl:-mx-10">
+        <motion.div ref={proofRef} variants={fadeUp} className="mt-12 md:mt-24 md:mx-5 lg:mx-8 xl:-mx-10">
           <div className="flex items-center gap-4">
-            <span className="flex-1 border-t border-dashed border-white/15" />
-            <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 whitespace-nowrap">
+            <span className="flex-1 border-t border-dashed border-navy/15" />
+            <span className="text-eyebrow text-navy/70 whitespace-nowrap">
               Technologies I work with
             </span>
-            <span className="flex-1 border-t border-dashed border-white/15" />
+            <span className="flex-1 border-t border-dashed border-navy/15" />
           </div>
 
           {/* Below sm: scrolling row */}
@@ -368,6 +376,10 @@ const Hero = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Flight-route layer: TicketButton draws its route + plane here so the
+            route can run from the ticket up to the headline. */}
+        <div ref={setRouteLayer} aria-hidden className="absolute inset-0 z-20 pointer-events-none hidden lg:block" />
       </motion.div>
     </section>
   );

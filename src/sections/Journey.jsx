@@ -17,6 +17,7 @@ const steps = [
 ];
 
 import Robot from "../components/Robot";
+import SectionShell from "../components/SectionShell";
 
 
 
@@ -45,7 +46,13 @@ const Journey = () => {
   }, []);
 
   return (
-    <section ref={containerRef} id="work" className="relative bg-transparent text-white py-32 min-h-screen">
+    <SectionShell
+      id="journey"
+      theme="light"
+      className="py-0!"
+      innerClassName="max-w-none! px-0!"
+    >
+    <section ref={containerRef} className="relative text-navy/80 py-32 min-h-screen">
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row relative">
         
         {/* Left: Timeline Content */}
@@ -53,7 +60,7 @@ const Journey = () => {
           
           {/* Minimal Header */}
           <div className="mb-24 md:mb-32">
-            <p className="text-xs tracking-[0.4em] uppercase text-white/30 mb-4">The Process</p>
+            <p className="text-xs tracking-[0.4em] uppercase text-navy/70 mb-4">The Process</p>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-none">
               How we get there.
             </h2>
@@ -62,7 +69,7 @@ const Journey = () => {
           {/* Minimal Timeline Layout */}
           <div className="relative">
             {/* Global Vertical Line */}
-            <div className="absolute left-0 top-0 bottom-0 w-px bg-white/10" />
+            <div className="absolute left-0 top-0 bottom-0 w-px bg-navy/10" />
 
             <div className="flex flex-col gap-20 md:gap-32">
               {steps.map((item, i) => (
@@ -71,20 +78,20 @@ const Journey = () => {
                   className="journey-step relative opacity-20 -translate-x-8 pl-8 md:pl-16"
                 >
                   {/* Glowing Dot on the line */}
-                  <div className="absolute -left-[4.5px] top-3 md:top-5 w-[10px] h-[10px] rounded-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]" />
+                  <div className="absolute -left-[4.5px] top-3 md:top-5 w-[10px] h-[10px] rounded-full bg-navy shadow-sm" />
                   
                   <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-12">
                     {/* Huge Minimal Number */}
-                    <span className="text-5xl md:text-6xl font-light text-white/20 tracking-tighter w-20 flex-shrink-0">
+                    <span className="text-5xl md:text-6xl font-light text-navy/70 tracking-tighter w-20 flex-shrink-0">
                       {item.step}
                     </span>
                     
                     {/* Content */}
                     <div className="flex-1 mt-1 md:mt-3">
-                      <h3 className="text-2xl md:text-4xl font-medium tracking-tight mb-4 text-white">
+                      <h3 className="text-2xl md:text-4xl font-medium tracking-tight mb-4 text-navy">
                         {item.title}
                       </h3>
-                      <p className="text-base md:text-lg text-white/50 font-light leading-relaxed">
+                      <p className="text-body md:text-lg text-navy/70 font-light leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -110,6 +117,7 @@ const Journey = () => {
 
       </div>
     </section>
+    </SectionShell>
   );
 };
 

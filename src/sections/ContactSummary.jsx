@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { BracketLabel } from "../components/SectionHeader";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -44,28 +45,19 @@ const ContactSummary = () => {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen bg-transparent text-white flex flex-col items-center justify-center overflow-hidden px-6 py-32"
-    >
-      {/* Faint background label */}
-      <p className="absolute top-10 left-0 right-0 text-center text-xs tracking-[0.4em] uppercase text-white/20 font-light">
-        Available for new projects
-      </p>
-
-      {/* Decorative glowing orb */}
-      <div className="absolute w-[500px] h-[500px] rounded-full bg-[#a1ebd4]/5 blur-[120px] pointer-events-none" />
+    <div ref={sectionRef} className="flex flex-col items-center justify-center pb-24 md:pb-32">
+      <BracketLabel number="05" name="Contact" theme="navy" className="mb-10 text-center" />
 
       {/* Main Heading */}
       <div className="text-center mb-16" style={{ perspective: "800px" }}>
         <h2
           ref={headingRef}
-          className="text-[60px] sm:text-[80px] md:text-[110px] lg:text-[140px] font-black tracking-tighter leading-none uppercase"
+          className="text-[60px] sm:text-[80px] md:text-[110px] lg:text-[140px] font-black tracking-tighter leading-none uppercase text-base"
           style={{ transformStyle: "preserve-3d" }}
         >
           Got a Project?
         </h2>
-        <p className="text-base md:text-xl text-white/40 font-light mt-6 max-w-md mx-auto">
+        <p className="text-body md:text-xl text-base/70 font-light mt-6 max-w-md mx-auto">
           Whether it's a new build or improving an existing product — let's create something meaningful together.
         </p>
       </div>
@@ -80,20 +72,18 @@ const ContactSummary = () => {
         <a
           href="mailto:riadh5726@gmail.com"
           ref={btnRef}
-          className="relative flex items-center gap-4 bg-white text-black font-semibold text-lg md:text-xl px-10 py-5 rounded-full group overflow-hidden shadow-[0_0_40px_rgba(161,235,212,0.15)] hover:shadow-[0_0_60px_rgba(161,235,212,0.3)] transition-shadow duration-500"
+          className="relative flex items-center gap-4 bg-accent text-navy font-semibold text-lg md:text-xl px-10 py-5 rounded-full group overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500"
         >
           <span className="relative z-10">Let's Talk</span>
-          <div className="relative z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
+          <div className="relative z-10 w-10 h-10 bg-navy text-base rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
             <Icon icon="lucide:arrow-up-right" className="w-5 h-5" />
           </div>
-          {/* Green fill on hover */}
-          <div className="absolute inset-0 bg-[#a1ebd4] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left rounded-full" />
+          {/* Light fill on hover */}
+          <div className="absolute inset-0 bg-base scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left rounded-full" />
         </a>
       </div>
 
-      {/* Bottom decorative divider */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-    </section>
+    </div>
   );
 };
 

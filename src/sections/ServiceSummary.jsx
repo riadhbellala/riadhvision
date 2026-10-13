@@ -2,6 +2,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import { useRef } from "react";
+import SectionShell from "../components/SectionShell";
+import TicketQuote from "../components/TicketQuote";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,14 +78,21 @@ const ServiceSummary = () => {
   }, []);
 
   return (
+    <SectionShell
+      id="about"
+      theme="light"
+      className="py-0!"
+      innerClassName="max-w-none! px-0!"
+    >
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen bg-transparent overflow-hidden flex items-center pt-32 pb-32"
+      className="relative w-full min-h-screen overflow-hidden flex items-center pt-32 pb-32"
     >
       {/* Huge Background Text */}
       <div
         ref={bgTextRef}
-        className="absolute top-[15%] left-0 whitespace-nowrap text-white text-[100px] sm:text-[150px] md:text-[200px] lg:text-[250px] font-medium tracking-tighter select-none z-0"
+        aria-hidden="true"
+        className="absolute top-[15%] left-0 whitespace-nowrap text-navy/[0.06] text-[100px] sm:text-[150px] md:text-[200px] lg:text-[250px] font-medium tracking-tighter select-none pointer-events-none z-0"
       >
         Full-Stack Software Engineer
       </div>
@@ -94,7 +103,7 @@ const ServiceSummary = () => {
         <div className="w-full lg:w-5/12 flex justify-center lg:justify-start">
           <div 
             ref={imageContainerRef}
-            className="w-full max-w-[420px] aspect-[3/4] overflow-hidden rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.8)]"
+            className="relative z-10 w-full max-w-[420px] aspect-[3/4] overflow-hidden rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.8)]"
             style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             <img
@@ -107,10 +116,10 @@ const ServiceSummary = () => {
         </div>
 
         {/* Right: Text Content */}
-        <div className="w-full lg:w-7/12 flex flex-col justify-end text-white h-full lg:mt-[20%]">
+        <div className="w-full lg:w-7/12 flex flex-col justify-end text-navy/80 h-full lg:mt-[20%]">
           <div
             ref={text1Ref}
-            className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed mb-10 max-w-2xl"
+            className="relative z-10 text-xl md:text-2xl lg:text-3xl font-light leading-relaxed mb-10 max-w-2xl"
           >
             Full-stack Software Developer with high quality products ,
             working in multiple software projects, building high-quality,
@@ -119,7 +128,7 @@ const ServiceSummary = () => {
 
           <div
             ref={text2Ref}
-            className="text-sm md:text-base lg:text-lg text-white/50 font-light leading-loose max-w-xl self-end text-right"
+            className="relative z-10 text-sm md:text-body lg:text-lg text-navy/70 font-light leading-loose max-w-xl self-end text-right"
           >
             I work across frontend systems, backend services, and application
             architecture to deliver scalable web products built for real users.
@@ -128,9 +137,16 @@ const ServiceSummary = () => {
             long-term maintainability, and solutions that support real business
             growth.
           </div>
+
+          {/* Not targeted by the section's reveal animations (they use refs). */}
+          <TicketQuote
+            className="relative z-10 mt-12 w-full max-w-[640px] ml-auto"
+            quote="Clean code, clear communication, and products built to last."
+          />
         </div>
       </div>
     </section>
+    </SectionShell>
   );
 };
 

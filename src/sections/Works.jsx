@@ -5,6 +5,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
+import SectionShell from "../components/SectionShell";
+import SectionHeader from "../components/SectionHeader";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,7 +86,7 @@ const GalleryImage = ({ project, isActive, isHovered }) => {
               style={{
                 width: i === frameIndex ? "16px" : "6px",
                 height: "6px",
-                background: i === frameIndex ? "white" : "rgba(255,255,255,0.4)",
+                background: i === frameIndex ? "var(--color-base)" : "color-mix(in srgb, var(--color-base) 40%, transparent)",
               }}
             />
           ))}
@@ -99,6 +101,27 @@ const Works = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isContainerHovered, setIsContainerHovered] = useState(false);
   const rightColumnRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  // Images change the section's height as they load; re-measure all
+  // ScrollTriggers (this section's and everything below it) once they're in.
+  useEffect(() => {
+    const imgs = [...sectionRef.current.querySelectorAll("img")];
+    let cancelled = false;
+    Promise.all(
+      imgs.map((img) =>
+        img.complete
+          ? null
+          : new Promise((resolve) => {
+              img.addEventListener("load", resolve, { once: true });
+              img.addEventListener("error", resolve, { once: true });
+            })
+      )
+    ).then(() => !cancelled && ScrollTrigger.refresh());
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useGSAP(() => {
     const projectBlocks = gsap.utils.toArray(".project-block");
@@ -116,25 +139,25 @@ const Works = () => {
   const activeProject = projects[activeIndex];
 
   return (
-    <section id="work" className="relative w-full bg-[#e5e5e0] text-black">
-      <div className="flex flex-col md:flex-row w-full">
+    <SectionShell
+      ref={sectionRef}
+      id="work"
+      theme="light"
+      className="text-navy"
+    >
+      <SectionHeader number="02" eyebrow="Work" title="Selected Works" intro="Structure in Code, Story in Results." />
 
-        {/* Left Side: Sticky Image Preview */}
-        <div className="w-full md:w-1/2 h-[50vh] md:h-screen sticky top-0 flex flex-col items-start justify-center p-6 md:p-16 overflow-hidden">
+      <div data-anchor="work-row" className="flex flex-col md:flex-row w-full">
 
-          <div className="z-10 pointer-events-none w-full mb-6 md:mb-10">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase">Selected Works</h2>
-            <p className="text-xs md:text-sm font-light mt-2 max-w-sm text-black/60">
-              Structure in Code, Story in Results.
-            </p>
-          </div>
+        {/* Left Side: Sticky Image Preview (sticks below the fixed Navbar) */}
+        <div className="w-full md:w-1/2 h-[45vh] md:h-[calc(100vh-9rem)] sticky top-[92px] md:top-28 z-10 flex flex-col items-start justify-center py-4 md:pr-10 overflow-hidden">
 
           {/* 
             onMouseEnter/Leave here — ABOVE the z-20 Link overlay.
             This is the actual outer container div, so it fires correctly.
           */}
           <div
-            className="group/container relative w-full flex-1 max-h-[50vh] md:max-h-[70vh] rounded-2xl overflow-hidden shadow-2xl"
+            className="group/container relative w-full flex-1 max-h-[50vh] md:max-h-[70vh] rounded-2xl overflow-hidden border border-navy/10 shadow-md"
             onMouseEnter={() => setIsContainerHovered(true)}
             onMouseLeave={() => setIsContainerHovered(false)}
           >
@@ -174,9 +197,9 @@ const Works = () => {
             {/* Overlay link — z-20, sits on top but parent div catches hover */}
             <Link
               to={`/project/${activeProject?.slug}`}
-              className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/20 transition-opacity duration-300 group cursor-pointer z-20"
+              className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-navy/20 transition-opacity duration-300 group cursor-pointer z-20"
             >
-              <div className="bg-white text-black rounded-full p-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+              <div className="bg-base text-navy rounded-full p-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
                 <span className="sr-only">View Project</span>
                 <Icon icon="lucide:arrow-up-right" className="w-8 h-8" />
               </div>
@@ -185,25 +208,25 @@ const Works = () => {
         </div>
 
         {/* Right Side: Vertically Scrolling List */}
-        <div ref={rightColumnRef} className="w-full md:w-1/2 flex flex-col py-[10vh] md:py-[50vh]">
+        <div ref={rightColumnRef} className="w-full md:w-1/2 flex flex-col pt-[10vh] pb-[10vh] md:pt-0 md:pb-[35vh]">
           {projects.map((project, index) => (
             <Link
               key={project.id}
               to={`/project/${project.slug}`}
-              className="project-block group flex flex-col justify-center min-h-[50vh] px-6 md:px-24 border-b border-black/10 last:border-b-0 cursor-pointer"
+              className="project-block group flex flex-col justify-center min-h-[50vh] md:px-12 border-b border-navy/10 last:border-b-0 cursor-pointer"
             >
-              <h1 className={`text-[40px] sm:text-[60px] md:text-[80px] font-bold leading-none tracking-tighter uppercase transition-colors duration-500 ${index === activeIndex ? "text-black" : "text-black/30"}`}>
+              <h1 className={`text-[40px] sm:text-[60px] md:text-[clamp(32px,4.6vw,64px)] break-words font-bold leading-none tracking-tighter uppercase transition-colors duration-500 ${index === activeIndex ? "text-navy" : "text-navy/55"}`}>
                 {project.name.split(" — ")[0]}
               </h1>
               {project.name.includes(" — ") && (
-                <p className={`mt-2 text-sm md:text-base font-light uppercase tracking-widest transition-colors duration-500 ${index === activeIndex ? "text-black/60" : "text-black/20"}`}>
+                <p className={`mt-2 text-sm md:text-body font-light uppercase tracking-widest transition-colors duration-500 ${index === activeIndex ? "text-navy/80" : "text-navy/70"}`}>
                   {project.name.split(" — ")[1]}
                 </p>
               )}
-              <p className={`mt-4 text-sm font-light leading-relaxed max-w-sm transition-colors duration-500 ${index === activeIndex ? "text-black/70" : "text-black/20"}`}>
+              <p className={`mt-4 text-sm font-light leading-relaxed max-w-sm transition-colors duration-500 ${index === activeIndex ? "text-navy/80" : "text-navy/70"}`}>
                 {project.description}
               </p>
-              <div className={`mt-6 flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-all duration-500 ${index === activeIndex ? "text-black opacity-100 translate-x-0" : "text-black/20 opacity-0 -translate-x-2"}`}>
+              <div className={`mt-6 flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-all duration-500 ${index === activeIndex ? "text-navy opacity-100 translate-x-0" : "text-navy/70 opacity-0 -translate-x-2"}`}>
                 <span>View Project</span>
                 <Icon icon="lucide:arrow-up-right" className="w-3.5 h-3.5" />
               </div>
@@ -212,7 +235,7 @@ const Works = () => {
         </div>
 
       </div>
-    </section>
+    </SectionShell>
   );
 };
 
