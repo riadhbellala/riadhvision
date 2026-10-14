@@ -15,12 +15,14 @@ const LINKS = [
   { label: "Contact", target: "#contact" },
 ];
 
-const BAR_HEIGHT = 76;
-const NAV_LINE = 20 + BAR_HEIGHT; // the navbar's bottom edge, px from the viewport top
-const SCROLL_OFFSET = -110; // matches the sections' scroll-margin-top
-const NOTCH = 7; // tuned to image 1: small notches relative to the bar height
-const DOT = 10;
-const LOGO_PAD_RIGHT = 48;
+const BAR_TOP = 16;
+const BAR_HEIGHT = { desktop: 56, mobile: 52, condensed: 48 };
+const CONDENSE_AT = 80; // px scrolled before the bar condenses
+const NAV_LINE = BAR_TOP + BAR_HEIGHT.desktop; // the navbar's bottom edge, px from the viewport top
+const SCROLL_OFFSET = -88; // matches the sections' scroll-margin-top
+const NOTCH = 7;
+const DOT = 7;
+const EASE_OUT_EXPO = "cubic-bezier(0.22, 1, 0.36, 1)";
 const LOGO_WEIGHT = 900; // closest to image 1 (Amiamie has no 600; 400 matched the links)
 const MENU_ROW = 56;
 const MENU_HEIGHT = LINKS.length * MENU_ROW + (LINKS.length - 1); // rows + 1px perforations
@@ -61,7 +63,7 @@ const styles = `
   .ticket-ink { color: var(--t-ink); transition: color 300ms; }
   .ticket-ink-soft { color: var(--t-ink-soft); transition: color 300ms; }
   .ticket-perf-v {
-    width: 1px; flex: none; margin: 9px 0; /* starts just below the notch */
+    width: 1px; flex: none; margin: 8px 0; /* starts just below the notch */
     background-image: linear-gradient(to bottom, var(--t-perf) 3px, transparent 3px);
     background-size: 1px 6px; background-repeat: repeat-y;
   }
@@ -141,7 +143,6 @@ function MenuIcon({ open }) {
 function TicketNavbar() {
   const lenis = useLenis();
   const isMobile = useMediaQuery({ maxWidth: 899 });
-  const isTiny = useMediaQuery({ maxWidth: 479 });
   const layoutKey = isMobile ? "mobile" : "desktop";
 
   const navRef = useRef(null);
@@ -167,6 +168,20 @@ function TicketNavbar() {
 
   const [active, setActive] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [condensed, setCondensed] = useState(false);
+  const barHeight = condensed ? BAR_HEIGHT.condensed : isMobile ? BAR_HEIGHT.mobile : BAR_HEIGHT.desktop;
+
+  // Condense after scrolling past CONDENSE_AT; restore at the top.
+  useEffect(function watchScroll() {
+    function update() {
+      setCondensed(window.scrollY > CONDENSE_AT);
+    }
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return function stopWatching() {
+      window.removeEventListener("scroll", update);
+    };
+  }, []);
 
   const mainShape = useTicketShape(mainRef, perfRefs, {
     radius: mainRadius,
@@ -433,13 +448,17 @@ function TicketNavbar() {
     [isMobile]
   );
 
-  perfRefs.current = [];
-  menuPerfRefs.current = [];
-  function addPerf(el) {
-    if (el) perfRefs.current.push(el);
-  }
-  function addMenuPerf(el) {
-    if (el) menuPerfRefs.current.push(el);
+  // Perforation elements, keyed and updated only at commit (never reset during
+  // render: a render React discards would otherwise leave the list empty and
+  // useTicketShape would measure no perforations). Order doesn't matter;
+  // buildTicketPath sorts the positions.
+  function perfRef(store, key) {
+    return function setPerf(el) {
+      const map = store.map || (store.map = new Map());
+      if (el) map.set(key, el);
+      else map.delete(key);
+      store.current = [...map.values()];
+    };
   }
   function linkRef(target) {
     return function setLinkRef(el) {
@@ -447,7 +466,7 @@ function TicketNavbar() {
     };
   }
 
-  const fallback = BAR_HEIGHT / 2;
+  const fallback = barHeight / 2;
 
   return (
     <nav ref={navRef} aria-label="Main" data-theme="light" className="ticket-nav">
@@ -456,8 +475,15 @@ function TicketNavbar() {
       {/* The bar */}
       <div
         ref={barRef}
-        className="fixed top-5 inset-x-0 mx-auto z-[60] flex"
-        style={{ width: "min(1180px, calc(100% - 40px))", height: BAR_HEIGHT }}
+        className="fixed inset-x-0 mx-auto z-[60] flex"
+        // Height animates; useTicketShape's ResizeObserver re-measures every
+        // frame of the transition, so the notches stay aligned.
+        style={{
+          top: BAR_TOP,
+          width: "min(920px, calc(100% - 40px))",
+          height: barHeight,
+          transition: `height 300ms ${EASE_OUT_EXPO}`,
+        }}
       >
         <GlassTicket innerRef={mainRef} shape={mainShape} fallbackRadius={fallback} className="h-full flex-1 min-w-0">
           <div className="flex h-full items-stretch">
@@ -465,23 +491,18 @@ function TicketNavbar() {
             <a
               href="#home"
               onClick={handleLogoClick}
-              className={`ticket-seg flex flex-col justify-center min-w-0 ${isMobile ? "pl-7 pr-4" : ""}`}
+              className={`ticket-seg flex flex-col justify-center min-w-0 ${isMobile ? "pl-5 pr-3" : "px-5"}`}
               // Desktop: the logo hugs its text; the four links share the rest.
-              style={isMobile ? { flex: "1 1 auto" } : { flex: "0 0 auto", paddingLeft: 40, paddingRight: LOGO_PAD_RIGHT }}
+              style={{ flex: isMobile ? "1 1 auto" : "0 0 auto" }}
             >
-              <span data-ticket-text className="ticket-ink leading-none truncate" style={{ fontSize: isMobile ? 20 : 26, fontWeight: LOGO_WEIGHT }}>
+              <span data-ticket-text className="ticket-ink leading-none truncate" style={{ fontSize: isMobile ? 16 : 18, fontWeight: LOGO_WEIGHT }}>
                 RiadhVision
               </span>
-              {!isTiny && (
-                <span data-ticket-text className="ticket-ink-soft font-mono mt-1.5 truncate" style={{ fontSize: 13, letterSpacing: "0.08em" }}>
-                  ORN → ANYWHERE
-                </span>
-              )}
             </a>
 
             {isMobile ? (
               <>
-                <span ref={addPerf} aria-hidden className="ticket-perf-v" />
+                <span ref={perfRef(perfRefs, "menu")} aria-hidden className="ticket-perf-v" />
                 <button
                   ref={menuButtonRef}
                   type="button"
@@ -489,9 +510,9 @@ function TicketNavbar() {
                   aria-expanded={menuOpen}
                   aria-controls="ticket-menu"
                   aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  className="ticket-seg ticket-ink flex items-center justify-center w-[84px] shrink-0 cursor-pointer"
+                  className="ticket-seg ticket-ink flex items-center justify-center w-[64px] shrink-0 cursor-pointer"
                 >
-                  <span className="ticket-hl absolute inset-x-[6px] inset-y-[10px] rounded-[18px]" />
+                  <span className="ticket-hl absolute inset-x-[5px] inset-y-[8px] rounded-[14px]" />
                   <span data-ticket-text className="ticket-lift relative">
                     <MenuIcon open={menuOpen} />
                   </span>
@@ -502,19 +523,19 @@ function TicketNavbar() {
                 const isActive = active === link.target;
                 return (
                   <span key={link.target} className="contents">
-                    <span ref={addPerf} aria-hidden className="ticket-perf-v" />
+                    <span ref={perfRef(perfRefs, link.target)} aria-hidden className="ticket-perf-v" />
                     <a
                       ref={linkRef(link.target)}
                       href={link.target}
                       onClick={handleLinkClick}
                       aria-current={isActive ? "true" : undefined}
                       className="ticket-seg ticket-ink flex items-center justify-center min-w-0"
-                      style={{ flex: "1 1 0", fontSize: 17 }}
+                      style={{ flex: "1 1 0", fontSize: 14 }}
                     >
-                      <span className="ticket-hl absolute inset-x-[6px] inset-y-[10px] rounded-[18px]" />
+                      <span className="ticket-hl absolute inset-x-[5px] inset-y-[8px] rounded-[14px]" />
                       <span data-ticket-text className="relative">
                         {/* The stamped (active) label sits a touch lower, as in image 1 */}
-                        <span className="relative block transition-[top] duration-300" style={{ top: isActive ? 3 : 0 }}>
+                        <span className="relative block transition-[top] duration-300" style={{ top: isActive ? 2 : 0 }}>
                           <span className="ticket-lift">{link.label}</span>
                         </span>
                       </span>
@@ -530,8 +551,15 @@ function TicketNavbar() {
             <span
               ref={dotRef}
               aria-hidden
-              className="absolute top-[16px] left-0 rounded-full bg-accent pointer-events-none"
-              style={{ width: DOT, height: DOT, boxShadow: "0 0 0 1px rgba(244,248,251,0.95)", opacity: 0 }}
+              className="absolute left-0 rounded-full bg-accent pointer-events-none"
+              // Just above the (shifted) active label: centre − half the text − gap − dot.
+              style={{
+                top: "calc(50% - 17px)",
+                width: DOT,
+                height: DOT,
+                boxShadow: "0 0 0 1px rgba(244,248,251,0.95)",
+                opacity: 0,
+              }}
             />
           )}
         </GlassTicket>
@@ -540,7 +568,7 @@ function TicketNavbar() {
             meet the main ticket's, so together they read as one ticket. */}
         <div
           ref={stubWrapRef}
-          className="ticket-stub h-full shrink-0"
+          className="ticket-stub relative h-full shrink-0"
           style={{ flex: isMobile ? "0 0 76px" : "0 0 20%" }}
           onMouseEnter={handleStubEnter}
           onMouseLeave={handleStubLeave}
@@ -553,7 +581,7 @@ function TicketNavbar() {
               onFocus={handleStubEnter}
               onBlur={handleStubLeave}
               aria-label={isMobile ? "Let's talk" : undefined}
-              className="ticket-seg ticket-ink w-full h-full flex items-center justify-center gap-3 cursor-pointer"
+              className="ticket-seg ticket-ink w-full h-full flex items-center justify-center gap-3 cursor-pointer whitespace-nowrap"
               style={{ fontSize: 17 }}
             >
               <span data-ticket-text className="flex items-center gap-3">
@@ -572,7 +600,7 @@ function TicketNavbar() {
           ref={menuWrapRef}
           id="ticket-menu"
           className="fixed inset-x-0 mx-auto z-[10000] overflow-hidden"
-          style={{ top: 20 + BAR_HEIGHT + 8, width: "min(1180px, calc(100% - 40px))", height: 0, visibility: "hidden" }}
+          style={{ top: BAR_TOP + barHeight + 8, width: "min(920px, calc(100% - 40px))", height: 0, visibility: "hidden" }}
         >
           <GlassTicket innerRef={menuRef} shape={menuShape} fallbackRadius={22} style={{ height: MENU_HEIGHT }}>
             <ul className="relative">
@@ -580,7 +608,7 @@ function TicketNavbar() {
                 const isActive = active === link.target;
                 return (
                   <li key={link.target} data-menu-row>
-                    {i > 0 && <div ref={addMenuPerf} aria-hidden className="ticket-perf-h" />}
+                    {i > 0 && <div ref={perfRef(menuPerfRefs, link.target)} aria-hidden className="ticket-perf-h" />}
                     <a
                       href={link.target}
                       onClick={handleLinkClick}

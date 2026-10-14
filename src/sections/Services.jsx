@@ -8,7 +8,7 @@ import { useGSAP } from "@gsap/react";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence, useMotionValue, useReducedMotion } from "framer-motion";
 import { servicesData } from "../constants";
-import SectionShell from "../components/SectionShell";
+import SectionShell, { SHEET_OVERLAP } from "../components/SectionShell";
 import SectionHeader from "../components/SectionHeader";
 import { GROOVE_WIDTH, groove } from "../lib/groove";
 
@@ -19,13 +19,9 @@ const STEP = 40; // degrees between markers on the dial
 const pad = (n) => String(n + 1).padStart(2, "0");
 const snapEase = (t) => 1 - (1 - t) * (1 - t); // power2.out
 
-// Panel height while pinned; the dial is 85% of it, so its radius is 42.5%.
-const PANEL_H = "min(760px, calc(100vh - 32px))";
+// The pinned sheet fills the viewport; the dial is 85% of it (radius 42.5%).
+const PANEL_H = "100vh";
 const DIAL_R = `calc(${PANEL_H} * 0.425)`;
-
-// Panel sits flush on the left screen edge (the dial's flat side lines up with
-// it); only the right corners are rounded.
-const PANEL_SIDE = "ml-0! mr-2! md:mr-4! rounded-l-none!";
 
 // --- Desktop: pinned, scroll-driven dial ------------------------------------------
 const PinnedServices = () => {
@@ -129,16 +125,18 @@ const PinnedServices = () => {
   const colors = groove.navy;
 
   return (
-    // flow-root stops the panel's vertical margin collapsing out of the wrapper,
-    // so the pinned box includes it and the panel sits 16px below the top.
-    <div ref={pinRef} className="flow-root">
+    // The pin goes on this full-width outer wrapper, which carries the sheet
+    // overlap; the sheet inside has no margins of its own.
+    <div ref={pinRef} className={`relative ${SHEET_OVERLAP}`}>
       <SectionShell
         id="services"
         theme="navy"
+        overlap={false}
         aria-labelledby="services-heading"
         onKeyDown={onKeyDown}
-        className={`py-0! my-4! ${PANEL_SIDE}`}
-        innerClassName="h-full"
+        className="py-0!"
+        // Top padding clears the fixed navbar.
+        innerClassName="h-full pt-24 pb-6"
         style={{ height: PANEL_H }}
         decoration={
           <>
@@ -229,7 +227,7 @@ const PinnedServices = () => {
         <div className="h-full grid grid-cols-[5fr_7fr] items-center">
           <div aria-hidden />
           <div className="max-w-[520px]">
-            <SectionHeader theme="navy" number="03" eyebrow="Services" title="What I can build for you" id="services-heading" className="mb-12!" />
+            <SectionHeader theme="navy" title="What I can build for you" id="services-heading" className="mb-12!" />
 
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -274,8 +272,12 @@ const PinnedServices = () => {
 
 // --- Below lg / reduced motion: a plain stack of cards ----------------------------
 const ServiceList = () => (
-  <SectionShell id="services" theme="navy" className={PANEL_SIDE} aria-labelledby="services-heading">
-    <SectionHeader theme="navy" number="03" eyebrow="Services" title="What I can build for you" id="services-heading" />
+  <SectionShell
+    id="services"
+    theme="navy"
+    aria-labelledby="services-heading"
+  >
+    <SectionHeader theme="navy" title="What I can build for you" id="services-heading" />
     <div className="flex flex-col gap-4">
       {servicesData.map((service, i) => (
         <article key={service.title} className="rounded-lg border border-base/10 p-6">

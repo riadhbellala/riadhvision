@@ -1,110 +1,140 @@
-import { useRef, useState, useEffect, useCallback } from "react";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { projects } from "../constants";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { projects } from "../constants";
 import SectionShell from "../components/SectionShell";
 import SectionHeader from "../components/SectionHeader";
 
-gsap.registerPlugin(ScrollTrigger);
+const FILTERS = ["All", "E-commerce", "SaaS & Platforms", "Websites"];
 
-// ── Gallery Image Component ──────────────────────────────────────────────────
-// isHovered is controlled by the outer container (above the z-20 Link overlay)
-// isActive drives mobile auto-cycle
-const GalleryImage = ({ project, isActive, isHovered }) => {
-  const gallery = project.gallery || [project.image];
-  const [frameIndex, setFrameIndex] = useState(0);
-  const intervalRef = useRef(null);
-
-  const startCycle = useCallback(() => {
-    if (gallery.length <= 1) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % gallery.length);
-    }, 600);
-  }, [gallery.length]);
-
-  const stopCycle = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+const cards = projects.map((project) => {
+  const [title] = project.name.split(" — ");
+  const live = Boolean(project.href) && project.href !== "#";
+  let domain = project.slug;
+  if (live) {
+    try {
+      domain = new URL(project.href).hostname.replace(/^www\./, "");
+    } catch {
+      domain = project.slug;
     }
-    setFrameIndex(0);
-  }, []);
+  }
+  return {
+    key: project.slug,
+    slug: project.slug,
+    title,
+    category: project.category,
+    line: project.description,
+    href: live ? project.href : null,
+    domain,
+    image: project.image,
+  };
+});
 
-  // Desktop: start/stop based on isHovered prop (set by outer container)
-  useEffect(() => {
-    if (window.innerWidth < 768) return;
-    if (isHovered && isActive) {
-      startCycle();
-    } else {
-      stopCycle();
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isHovered, isActive, startCycle, stopCycle]);
+const BrowserFrame = ({ card }) => (
+  <div className="relative rounded-xl border border-navy/10 bg-base overflow-hidden">
+    <div className="relative h-7 flex items-center px-3 border-b border-navy/10">
+      <span className="flex gap-1.5" aria-hidden>
+        <span className="w-1.5 h-1.5 rounded-full bg-navy/15" />
+        <span className="w-1.5 h-1.5 rounded-full bg-navy/15" />
+        <span className="w-1.5 h-1.5 rounded-full bg-navy/15" />
+      </span>
+      <span className="absolute left-1/2 -translate-x-1/2 font-mono text-[11px] text-navy/50 bg-navy/[0.04] rounded-full px-3 max-w-[60%] truncate">
+        {card.domain}
+      </span>
+    </div>
+    <div className="relative overflow-hidden aspect-[16/10]">
+      <img
+        src={card.image}
+        alt=""
+        loading="lazy"
+        className="w-full h-full object-cover object-top transition-transform duration-500 ease-out-expo motion-safe:group-hover:scale-[1.03]"
+      />
+      <span
+        aria-hidden
+        className="absolute top-3 right-3 grid place-items-center w-11 h-11 rounded-full bg-base/90 backdrop-blur text-navy opacity-0 scale-80 transition-[opacity,transform] duration-300 ease-out-expo group-hover:opacity-100 group-hover:scale-100"
+      >
+        ↗
+      </span>
+    </div>
+  </div>
+);
 
-  // Mobile: auto-cycle when in view
-  useEffect(() => {
-    if (window.innerWidth >= 768) return;
-    if (isActive && gallery.length > 1) {
-      startCycle();
-    } else {
-      stopCycle();
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isActive, gallery.length, startCycle, stopCycle]);
-
-  return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none">
-      {gallery.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={`${project.name} screenshot ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover object-top"
-          style={{
-            opacity: i === frameIndex ? 1 : 0,
-            transition: "opacity 300ms ease",
-            willChange: "opacity",
-          }}
-        />
-      ))}
-
-      {/* Dot indicators */}
-      {gallery.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {gallery.map((_, i) => (
-            <span
-              key={i}
-              className="block rounded-full transition-all duration-200"
-              style={{
-                width: i === frameIndex ? "16px" : "6px",
-                height: "6px",
-                background: i === frameIndex ? "var(--color-base)" : "color-mix(in srgb, var(--color-base) 40%, transparent)",
-              }}
-            />
-          ))}
-        </div>
+const Info = ({ card, featured }) => (
+  <div className="p-5 flex flex-col flex-1">
+    <p className="text-eyebrow text-navy/70">{card.category}</p>
+    <h3 className={`${featured ? "text-h2" : "text-h3"} text-navy mt-2`}>{card.title}</h3>
+    <p className="text-body text-navy/80 mt-2 line-clamp-2">{card.line}</p>
+    {/* Actions sit above the card's stretched link */}
+    <div className="relative z-[2] mt-auto pt-6 flex items-center gap-4">
+      <Link
+        to={`/project/${card.slug}`}
+        className="group/btn inline-flex items-center gap-3 h-[44px] pl-5 pr-2 rounded-full bg-navy text-base text-small font-medium transition-colors duration-150 hover:bg-navy/90"
+      >
+        View project
+        <span
+          aria-hidden
+          className="grid place-items-center w-7 h-7 rounded-full bg-accent text-navy transition-transform duration-200 ease-out-expo group-hover/btn:translate-x-1"
+        >
+          →
+        </span>
+      </Link>
+      {card.href && (
+        <a
+          href={card.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-small text-navy/70 hover:text-navy hover:underline underline-offset-4"
+        >
+          Live site ↗
+        </a>
       )}
     </div>
-  );
-};
+  </div>
+);
+
+/**
+ * One card system. `featured` = horizontal on lg (image 7 / info 5),
+ * `mirrored` puts the image on the right. Below lg every card is vertical.
+ * The card's own background covers the page lines behind it.
+ */
+const Card = ({ card, featured = false, mirrored = false }) => (
+  <div
+    className={`group relative h-full bg-base border border-navy/10 rounded-2xl p-3 shadow-sm transition-[box-shadow,transform] duration-[250ms] ease-out-expo hover:shadow-md motion-safe:hover:-translate-y-1 ${
+      featured ? "flex flex-col lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center" : "flex flex-col"
+    }`}
+  >
+    {/* Stretched link: the whole card opens the project page */}
+    <Link to={`/project/${card.slug}`} aria-label={`View project: ${card.title}`} className="absolute inset-0 z-[1] rounded-2xl" />
+    <div className={featured ? `lg:col-span-7 ${mirrored ? "lg:order-2" : ""}` : ""}>
+      <BrowserFrame card={card} />
+    </div>
+    <div className={featured ? "lg:col-span-5 flex flex-col h-full" : "flex flex-col flex-1"}>
+      <Info card={card} featured={featured} />
+    </div>
+  </div>
+);
 
 // ── Main Section ─────────────────────────────────────────────────────────────
 const Works = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isContainerHovered, setIsContainerHovered] = useState(false);
-  const rightColumnRef = useRef(null);
   const sectionRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const [filter, setFilter] = useState("All");
+  const visible = filter === "All" ? cards : cards.filter((c) => c.category === filter);
+  const featured = visible.slice(0, 2);
+  let rest = visible.slice(2);
+  // Odd count: the last one gets the featured horizontal style.
+  const tail = rest.length % 2 === 1 ? rest[rest.length - 1] : null;
+  if (tail) rest = rest.slice(0, -1);
 
-  // Images change the section's height as they load; re-measure all
-  // ScrollTriggers (this section's and everything below it) once they're in.
+  // Filtering and image loads change the section height; re-measure the
+  // ScrollTriggers below (e.g. the pinned Services section) once settled.
+  useEffect(() => {
+    const id = setTimeout(() => ScrollTrigger.refresh(), 700);
+    return () => clearTimeout(id);
+  }, [filter]);
+
   useEffect(() => {
     const imgs = [...sectionRef.current.querySelectorAll("img")];
     let cancelled = false;
@@ -123,118 +153,83 @@ const Works = () => {
     };
   }, []);
 
-  useGSAP(() => {
-    const projectBlocks = gsap.utils.toArray(".project-block");
-    projectBlocks.forEach((block, index) => {
-      ScrollTrigger.create({
-        trigger: block,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => setActiveIndex(index),
-        onEnterBack: () => setActiveIndex(index),
-      });
-    });
-  }, []);
-
-  const activeProject = projects[activeIndex];
+  const motionProps = (i) => ({
+    layout: !reduceMotion,
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    whileInView: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: (i % 2) * 0.08 } },
+    viewport: { once: true, amount: 0.15 },
+    exit: { opacity: 0, y: reduceMotion ? 0 : 12, transition: { duration: 0.25 } },
+  });
 
   return (
     <SectionShell
       ref={sectionRef}
       id="work"
       theme="light"
-      className="text-navy"
+      flat
+      // Pull the header up so the title's top ~10% sits in About's bottom fade
+      // (title box ≈ 2 lines × 1.05 → 10% ≈ 0.2 × font size).
+      className="text-navy pt-0! md:pt-0!"
+      style={{ marginTop: "calc(-0.2 * clamp(2.5rem, 5.5vw, 5rem))" }}
     >
-      <SectionHeader number="02" eyebrow="Work" title="Selected Works" intro="Structure in Code, Story in Results." />
+      <SectionHeader
+        number="02"
+        label="Work"
+        layout="split"
+        title="Selected projects"
+        intro="Real products for real businesses: e-commerce stores, platforms and websites built to perform."
+      />
 
-      <div data-anchor="work-row" className="flex flex-col md:flex-row w-full">
-
-        {/* Left Side: Sticky Image Preview (sticks below the fixed Navbar) */}
-        <div className="w-full md:w-1/2 h-[45vh] md:h-[calc(100vh-9rem)] sticky top-[92px] md:top-28 z-10 flex flex-col items-start justify-center py-4 md:pr-10 overflow-hidden">
-
-          {/* 
-            onMouseEnter/Leave here — ABOVE the z-20 Link overlay.
-            This is the actual outer container div, so it fires correctly.
-          */}
-          <div
-            className="group/container relative w-full flex-1 max-h-[50vh] md:max-h-[70vh] rounded-2xl overflow-hidden border border-navy/10 shadow-md"
-            onMouseEnter={() => setIsContainerHovered(true)}
-            onMouseLeave={() => setIsContainerHovered(false)}
-          >
-
-            {projects.map((project, index) => (
-              <div
-                key={project.id}
-                className="absolute inset-0 w-full h-full"
-                style={{
-                  opacity: index === activeIndex ? 1 : 0,
-                  transform: index === activeIndex ? "scale(1)" : "scale(1.05)",
-                  transition: "opacity 700ms ease, transform 700ms ease",
-                  pointerEvents: "none", // Let parent handle events
-                }}
-              >
-                {project.gallery ? (
-                  <GalleryImage
-                    project={project}
-                    isActive={index === activeIndex}
-                    isHovered={isContainerHovered}
-                  />
-                ) : (
-                  <img
-                    src={project.image}
-                    alt={project.name}
-                    className="absolute inset-0 w-full h-full object-cover object-top group-hover/container:object-bottom"
-                    style={{
-                      transitionProperty: "object-position",
-                      transitionDuration: "5s",
-                      transitionTimingFunction: "ease-in-out",
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-
-            {/* Overlay link — z-20, sits on top but parent div catches hover */}
-            <Link
-              to={`/project/${activeProject?.slug}`}
-              className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-navy/20 transition-opacity duration-300 group cursor-pointer z-20"
+      {/* Filter tabs */}
+      <div role="tablist" aria-label="Filter projects" className="flex flex-wrap gap-2 mb-10 md:mb-14">
+        {FILTERS.map((f) => {
+          const active = f === filter;
+          return (
+            <button
+              key={f}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setFilter(f)}
+              className={`text-small rounded-full px-4 py-2 transition-colors duration-150 cursor-pointer ${
+                active ? "bg-navy text-base" : "border border-navy/15 text-navy/70 hover:text-navy hover:border-navy/30"
+              }`}
             >
-              <div className="bg-base text-navy rounded-full p-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
-                <span className="sr-only">View Project</span>
-                <Icon icon="lucide:arrow-up-right" className="w-8 h-8" />
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        {/* Right Side: Vertically Scrolling List */}
-        <div ref={rightColumnRef} className="w-full md:w-1/2 flex flex-col pt-[10vh] pb-[10vh] md:pt-0 md:pb-[35vh]">
-          {projects.map((project, index) => (
-            <Link
-              key={project.id}
-              to={`/project/${project.slug}`}
-              className="project-block group flex flex-col justify-center min-h-[50vh] md:px-12 border-b border-navy/10 last:border-b-0 cursor-pointer"
-            >
-              <h1 className={`text-[40px] sm:text-[60px] md:text-[clamp(32px,4.6vw,64px)] break-words font-bold leading-none tracking-tighter uppercase transition-colors duration-500 ${index === activeIndex ? "text-navy" : "text-navy/55"}`}>
-                {project.name.split(" — ")[0]}
-              </h1>
-              {project.name.includes(" — ") && (
-                <p className={`mt-2 text-sm md:text-body font-light uppercase tracking-widest transition-colors duration-500 ${index === activeIndex ? "text-navy/80" : "text-navy/70"}`}>
-                  {project.name.split(" — ")[1]}
-                </p>
-              )}
-              <p className={`mt-4 text-sm font-light leading-relaxed max-w-sm transition-colors duration-500 ${index === activeIndex ? "text-navy/80" : "text-navy/70"}`}>
-                {project.description}
-              </p>
-              <div className={`mt-6 flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-all duration-500 ${index === activeIndex ? "text-navy opacity-100 translate-x-0" : "text-navy/70 opacity-0 -translate-x-2"}`}>
-                <span>View Project</span>
-                <Icon icon="lucide:arrow-up-right" className="w-3.5 h-3.5" />
-              </div>
-            </Link>
-          ))}
-        </div>
-
+              {f}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Featured: horizontal, the second mirrored */}
+      <div className="flex flex-col gap-6">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {featured.map((card, i) => (
+            <motion.article key={card.key} {...motionProps(i)}>
+              <Card card={card} featured mirrored={i === 1} />
+            </motion.article>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* The rest: two equal-height columns */}
+      {rest.length > 0 && (
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {rest.map((card, i) => (
+              <motion.article key={card.key} {...motionProps(i)} className="h-full">
+                <Card card={card} />
+              </motion.article>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {tail && (
+        <motion.article key={tail.key} {...motionProps(0)} className="mt-6">
+          <Card card={tail} featured />
+        </motion.article>
+      )}
     </SectionShell>
   );
 };

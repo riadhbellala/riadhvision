@@ -186,7 +186,7 @@ function measure(wrapper) {
   if (!hero || !contact) return null;
 
   const start = boxOf(hero, origin).bottom;
-  const end = boxOf(contact, origin).top + 40;
+  const end = boxOf(contact, origin).top;
   const centre = [{ x: 0.5 * W, y: start }];
   WAYPOINTS.forEach(function addSection(w) {
     const el = wrapper.querySelector(w.section);
@@ -235,7 +235,9 @@ function measure(wrapper) {
     })
     .forEach(function hidePanel(b) {
       if (b.top >= end - FADE) return; // the Contact panel is handled by the end fade
-      stops.push(`black ${b.top}px`, `transparent ${b.top + PANEL_INSET}px`, `transparent ${b.bottom - PANEL_INSET}px`, `black ${b.bottom}px`);
+      // Hidden from the navy sheet's top edge; visible again where the next
+      // sheet overlaps its bottom.
+      stops.push(`black ${b.top - PANEL_INSET}px`, `transparent ${b.top}px`, `transparent ${b.bottom - 48}px`, `black ${b.bottom - 48 + PANEL_INSET}px`);
     });
   stops.push(`black ${end - FADE}px`, `transparent ${end}px`);
 
@@ -345,7 +347,7 @@ function FreeLines() {
   }
 
   return (
-    <div ref={rootRef} aria-hidden className="absolute inset-0 z-0 pointer-events-none hidden md:block">
+    <div ref={rootRef} aria-hidden className="absolute inset-0 z-[1] pointer-events-none hidden md:block">
       {geo && (
         <svg
           width={geo.W}

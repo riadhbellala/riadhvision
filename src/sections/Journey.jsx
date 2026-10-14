@@ -18,6 +18,8 @@ const steps = [
 
 import Robot from "../components/Robot";
 import SectionShell from "../components/SectionShell";
+import SectionHeader from "../components/SectionHeader";
+import TintBackground from "../components/TintBackground";
 
 
 
@@ -49,22 +51,25 @@ const Journey = () => {
     <SectionShell
       id="journey"
       theme="light"
-      className="py-0!"
+      // Stacked sheet over the bottom of Services (overlap, rounded top, shadow);
+      // later in the DOM, so it paints above Services once the pin releases.
       innerClassName="max-w-none! px-0!"
+      decoration={<TintBackground />}
     >
-    <section ref={containerRef} className="relative text-navy/80 py-32 min-h-screen">
+    <section ref={containerRef} className="relative text-navy/80">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <SectionHeader
+          number="04"
+          label="Process"
+          layout="split"
+          title="How we get there"
+          intro="Six clear steps from the first conversation to launch day."
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row relative">
         
         {/* Left: Timeline Content */}
         <div className="w-full md:w-[55%] z-10">
-          
-          {/* Minimal Header */}
-          <div className="mb-24 md:mb-32">
-            <p className="text-xs tracking-[0.4em] uppercase text-navy/70 mb-4">The Process</p>
-            <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-none">
-              How we get there.
-            </h2>
-          </div>
 
           {/* Minimal Timeline Layout */}
           <div className="relative">

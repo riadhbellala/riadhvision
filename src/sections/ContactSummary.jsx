@@ -4,7 +4,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { BracketLabel } from "../components/SectionHeader";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -46,7 +45,6 @@ const ContactSummary = () => {
 
   return (
     <div ref={sectionRef} className="flex flex-col items-center justify-center pb-24 md:pb-32">
-      <BracketLabel number="05" name="Contact" theme="navy" className="mb-10 text-center" />
 
       {/* Main Heading */}
       <div className="text-center mb-16" style={{ perspective: "800px" }}>

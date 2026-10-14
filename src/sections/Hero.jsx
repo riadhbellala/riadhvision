@@ -191,7 +191,7 @@ const Hero = () => {
 
   const handleViewWork = (e) => {
     e.preventDefault();
-    if (lenis) lenis.scrollTo("#work", { offset: -110 });
+    if (lenis) lenis.scrollTo("#work", { offset: -88 });
     else document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -243,7 +243,7 @@ const Hero = () => {
     <section
       ref={heroRef}
       id="home"
-      className="hero-geo relative block md:flex md:items-center md:justify-center md:min-h-screen bg-transparent overflow-hidden px-4 pt-32 pb-16 md:pt-48 md:pb-4"
+      className="hero-geo relative block md:flex md:items-center md:justify-center md:min-h-screen bg-transparent overflow-hidden px-4 pt-26 pb-16 md:pt-42 md:pb-4"
     >
       <style>{heroStyles}</style>
 

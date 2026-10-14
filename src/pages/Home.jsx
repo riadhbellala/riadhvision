@@ -24,7 +24,7 @@ const Home = () => {
         <Services />
         <Journey />
         {/* Contact summary + footer share one navy panel */}
-        <SectionShell id="contact" theme="navy" className="pb-6 md:pb-8">
+        <SectionShell id="contact" theme="navy" panel className="pb-6 md:pb-8">
           <ContactSummary />
           <Contact />
         </SectionShell>

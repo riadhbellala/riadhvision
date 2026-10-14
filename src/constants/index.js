@@ -83,6 +83,7 @@ export const projects = [
     id: "yashome",
     name: "YasHome — Real Estate Platform",
     slug: "yashome",
+    category: "SaaS & Platforms",
     year: "2025",
     role: "Collaborator",
     description:
@@ -110,6 +111,7 @@ export const projects = [
     id: 1,
     name: "FrigoClimat — Commercial Refrigeration & Fitout",
     slug: "frigoclimat",
+    category: "Websites",
     year: "2025",
     role: "Frontend Developer",
     description:
@@ -136,6 +138,7 @@ export const projects = [
     id: "batioil",
     name: "Batioil — Premium Lubricants Brand",
     slug: "batioil",
+    category: "E-commerce",
     year: "2025",
     role: "Full-Stack Developer",
     description:
@@ -162,6 +165,7 @@ export const projects = [
     id: "pikbox",
     name: "PiKBOX® — Branding Agency Website",
     slug: "pikbox",
+    category: "Websites",
     year: "2025",
     role: "Full-Stack Developer",
     description:
@@ -188,6 +192,7 @@ export const projects = [
     id: 0,
     name: "Drivo — Multi-Tenant Car Rental SaaS",
     slug: "drivo",
+    category: "SaaS & Platforms",
     year: "2026",
     role: "Full-Stack Developer",
     description:
@@ -223,6 +228,7 @@ export const projects = [
     id: 1,
     name: "Athléte — Sports E-commerce Platform",
     slug: "athlete",
+    category: "E-commerce",
     year: "2024",
     role: "Full-Stack Developer",
     description:
@@ -249,6 +255,7 @@ export const projects = [
     id: 2,
     name: "HYDRAME",
     slug: "hydrame",
+    category: "Websites",
     year: "2025",
     role: "Frontend Developer",
     description:
@@ -275,6 +282,7 @@ export const projects = [
     id: 3,
     name: "SmartService DZ — Appointment SaaS",
     slug: "smartservice-dz",
+    category: "SaaS & Platforms",
     year: "2024",
     role: "Full-Stack Developer",
     description:
@@ -301,6 +309,7 @@ export const projects = [
     id: 4,
     name: "Ronaldinho Store — Sneaker Destination",
     slug: "ronaldinho-store",
+    category: "E-commerce",
     year: "2024",
     role: "Frontend Developer",
     description:
@@ -328,6 +337,7 @@ export const projects = [
     id: 6,
     name: "TriageFlow — Hospital Triage Dashboard",
     slug: "triageflow",
+    category: "SaaS & Platforms",
     year: "2025",
     role: "Full-Stack Developer",
     description:

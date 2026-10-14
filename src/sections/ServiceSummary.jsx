@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/all";
 import { useRef } from "react";
 import SectionShell from "../components/SectionShell";
 import TicketQuote from "../components/TicketQuote";
+import TintBackground from "../components/TintBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,8 +82,10 @@ const ServiceSummary = () => {
     <SectionShell
       id="about"
       theme="light"
+      flat
       className="py-0!"
       innerClassName="max-w-none! px-0!"
+      decoration={<TintBackground />}
     >
     <section
       ref={containerRef}

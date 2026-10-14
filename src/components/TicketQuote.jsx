@@ -69,8 +69,6 @@ function TicketQuote({
   route = "ORN → ANYWHERE",
   passenger = "Riadh",
   stampYear = new Date().getFullYear(),
-  index = "01",
-  label = "boarding note",
   className = "",
 }) {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
@@ -178,11 +176,6 @@ function TicketQuote({
 
   return (
     <figure ref={rootRef} className={className} style={glassVars}>
-      {/* Bracket label, like the section headers */}
-      <p className="text-navy/70 mb-4" style={{ ...mono, fontSize: 12 }}>
-        [ <span className="tabular-nums">{index}</span>&nbsp; {label} ]
-      </p>
-
       <div
         ref={ticketRef}
         className="flex flex-col sm:flex-row items-stretch"
