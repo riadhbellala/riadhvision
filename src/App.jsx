@@ -1,16 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, lazy, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ReactLenis, { useLenis } from "lenis/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Home from "./pages/Home";
-import ProjectDetails from "./pages/ProjectDetails";
-import ProjectRequest from "./pages/ProjectRequest";
 import ScrollToTop from "./components/ScrollToTop";
 import Chatbot from "./components/Chatbot";
-import Login from "./pages/admin/Login";
-import Dashboard from "./pages/admin/Dashboard";
+
+// Pages other than Home load on demand, so the first visit only downloads Home.
+const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
+const ProjectRequest = lazy(() => import("./pages/ProjectRequest"));
+const Login = lazy(() => import("./pages/admin/Login"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 import ProtectedRoute from "./components/ProtectedRoute";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -41,6 +43,7 @@ const App = () => {
       <div className="min-h-screen">
         <Router>
           <ScrollToTop />
+          <Suspense fallback={<div className="min-h-screen bg-ink" />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project/:slug" element={<ProjectDetails />} />
@@ -49,6 +52,7 @@ const App = () => {
             <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           </Routes>
+          </Suspense>
           <Chatbot />
         </Router>
       </div>

@@ -1,33 +1,36 @@
 import React from "react";
-import TicketNavbar from "../components/TicketNavbar";
-import Hero from "../sections/Hero";
-import ServiceSummary from "../sections/ServiceSummary";
-import Services from "../sections/Services";
-import Works from "../sections/Works";
-import ContactSummary from "../sections/ContactSummary";
-import Contact from "../sections/Contact";
-import Journey from "../sections/Journey";
-import SectionShell from "../components/SectionShell";
-import FreeLines from "../components/FreeLines";
+import NavbarV2 from "../v2/components/NavbarV2";
+import HeroBackground from "../v2/components/HeroBackground";
+import Hero from "../v2/sections/Hero";
+import Manifesto from "../v2/sections/Manifesto";
+import Services from "../v2/sections/Services";
+import Work from "../v2/sections/Work";
+import FocusEngine from "../v2/sections/FocusEngine";
+import Contact from "../v2/sections/Contact";
+import Footer from "../v2/sections/Footer";
+import { useReveal } from "../v2/components/useReveal";
 
+// v2 "Aura" skeleton. The v1 sections in src/sections stay in the repo, unrendered.
+// ScrollToTop and the Chatbot are rendered by App.jsx.
 const Home = () => {
+  useReveal();
   return (
     <>
-      <TicketNavbar />
-      {/* Page wrapper: FreeLines run behind every section (sections are z-10;
-          light ones are transparent, navy panels cover the ribbon). */}
-      <div className="relative">
-        <FreeLines />
-        <Hero />
-        <ServiceSummary />
-        <Works />
-        <Services />
-        <Journey />
-        {/* Contact summary + footer share one navy panel */}
-        <SectionShell id="contact" theme="navy" panel className="pb-6 md:pb-8">
-          <ContactSummary />
+      {/* One fixed background for the whole site (after the reference); content scrolls over it */}
+      <HeroBackground />
+      <NavbarV2 />
+      {/* Each section paints its own grainy gradient field; they cross-dissolve.
+          Clip only horizontally so fields can extend above and below sections. */}
+      <div className="relative overflow-x-clip">
+        <main>
+          <Hero />
+          <Manifesto />
+          <Services />
+          <Work />
+          <FocusEngine />
           <Contact />
-        </SectionShell>
+        </main>
+        <Footer />
       </div>
     </>
   );

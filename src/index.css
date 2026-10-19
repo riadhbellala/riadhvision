@@ -1,6 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap");
+/* v2 "Aura": Satoshi (Aeonik fallback) + Instrument Serif Italic accent */
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap");
 @import "tailwindcss";
+
+/* Aeonik (commercial, self-hosted in /fonts/aeonik/). If the files are missing
+   the browser skips this face and falls back to Satoshi. */
+@font-face {
+  font-family: "Aeonik";
+  src: url("/fonts/aeonik/Aeonik-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("/fonts/aeonik/Aeonik-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("/fonts/aeonik/Aeonik-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Amiamie Regular */
 @font-face {
@@ -120,7 +147,6 @@
   --color-accent: #ADDFF1;
   --color-error: #C2410C;
 
-  --font-sans: "Amiamie", system-ui, sans-serif;
   --font-hand: "Caveat", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
@@ -137,13 +163,51 @@
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Type scale — @utility so responsive variants work (md:text-h1).
-   Amiamie ships 300/400/900 only, so headings use 400. */
+/* ==========================================================================
+   v2 "Aura" — see RIADHVISION_V2_DESIGN_DIRECTION.md
+   (v1 tokens above stay for /start, /admin, /project/:slug and the Chatbot.)
+   ========================================================================== */
+@theme {
+  --color-ink: #070A16;
+  --color-ink-2: #0E1430;
+  --color-deep: #132A7A;
+  --color-royal: #2448C9;
+  --color-glow: #5B83E8;
+  --color-ice: #C9D8F4;
+  --color-snow: #F2F5FB;
+
+  --font-sans: "Aeonik", "Satoshi", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", serif;
+
+  --radius-pill: 9999px;
+  --radius-panel: 28px;
+  --radius-card: 20px;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Type scale — @utility so responsive variants work (md:text-h1). */
 @utility text-display {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  line-height: 1.05;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
+@utility text-statement {
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  line-height: 1.1;
   font-weight: 400;
-  letter-spacing: -0.035em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+@utility text-label {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 @utility text-h1 {
@@ -161,10 +225,10 @@
 }
 
 @utility text-h3 {
-  font-size: 1.5rem;
+  font-size: 24px;
   line-height: 1.25;
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 
 @utility text-h4 {
@@ -181,13 +245,13 @@
 }
 
 @utility text-body {
-  font-size: 1rem;
+  font-size: 17px;
   line-height: 1.6;
   font-weight: 400;
 }
 
 @utility text-small {
-  font-size: 0.875rem;
+  font-size: 14px;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -201,26 +265,24 @@
 }
 
 @layer base {
+  /* Ink base: no white flash on load or overscroll. */
   html,
   body {
-    background: var(--color-base);
-    color: color-mix(in srgb, var(--color-navy) 80%, transparent);
+    background: var(--color-ink);
+    color: var(--color-snow);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--color-navy);
-  }
   :focus-visible {
-    outline: 2px solid var(--color-navy);
+    outline: 2px solid var(--color-ice);
     outline-offset: 2px;
   }
-  /* Navy sections: a navy outline would be invisible, so use base */
-  .bg-navy :focus-visible {
-    outline-color: var(--color-base);
+  /* Light v1 pages (/project/:slug) keep a dark focus ring. */
+  .bg-base :focus-visible {
+    outline-color: var(--color-navy);
   }
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-navy);
+    background: var(--color-royal);
+    color: var(--color-snow);
   }
 }
 
@@ -250,3 +312,214 @@ body {
   @apply text-[34px] sm:text-[52px] md:text-[62px] lg:text-[100px] leading-[1.15];
 }
 
+
+/* ==========================================================================
+   v2 materials
+   ========================================================================== */
+@layer components {
+  /* Film grain over its (positioned) parent. Static, never animated. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Glass without backdrop-filter: the page sits on a soft, always-moving
+     gradient, so a live blur behind dozens of pills cost a re-blur every
+     scroll frame for almost no visible difference. A tinted fill reads the same. */
+  .glass-pill {
+    border-radius: var(--radius-pill);
+    background: rgba(242, 245, 251, 0.1);
+    border: 1px solid rgba(242, 245, 251, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  .glass-panel {
+    border-radius: var(--radius-panel);
+    background: linear-gradient(160deg, rgba(242, 245, 251, 0.12), rgba(242, 245, 251, 0.05)), rgba(14, 20, 48, 0.35);
+    border: 1px solid rgba(242, 245, 251, 0.25);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 24px 60px rgba(19, 42, 122, 0.12);
+  }
+
+  /* Fluted glass: vertical ribs (~18px) that turn what's behind into stripes. */
+  .fluted {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(242, 245, 251, 0.14) 0px,
+      rgba(242, 245, 251, 0.02) 8px,
+      rgba(7, 10, 22, 0.06) 14px,
+      rgba(242, 245, 251, 0.14) 18px
+    );
+  }
+}
+
+/* Section tones (set by v2 Section via data-tone). */
+/* Dark tone: full ice for body and labels. On the royal left of the
+   background, ice/80 and ice/70 fall below WCAG AA. */
+[data-tone="dark"] {
+  --tone-head: var(--color-snow);
+  --tone-body: var(--color-ice);
+  --tone-label: var(--color-ice);
+  --line: rgba(242, 245, 251, 0.7);
+}
+[data-tone="light"] {
+  --tone-head: var(--color-deep);
+  --tone-body: color-mix(in srgb, var(--color-deep) 80%, transparent);
+  --tone-label: var(--color-royal);
+  --line: rgba(242, 245, 251, 0.85);
+}
+@utility tone-head {
+  color: var(--tone-head);
+}
+@utility tone-body {
+  color: var(--tone-body);
+}
+@utility tone-label {
+  color: var(--tone-label);
+}
+
+@layer components {
+  /* Glass on light sections: a faint deep tint instead of light glass. */
+  [data-tone="light"] .glass-pill,
+  [data-tone="light"] .glass-panel {
+    background: rgba(19, 42, 122, 0.06);
+    border-color: color-mix(in srgb, var(--color-deep) 20%, transparent);
+  }
+
+  .asset-slot {
+    border-color: color-mix(in srgb, var(--color-ice) 30%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 50%, transparent);
+    color: var(--color-ice);
+  }
+  [data-tone="light"] .asset-slot {
+    border-color: color-mix(in srgb, var(--color-royal) 30%, transparent);
+    background: color-mix(in srgb, var(--color-snow) 70%, transparent);
+    color: var(--color-royal);
+  }
+}
+
+/* PageBackground colours: registered so GSAP / transitions interpolate them. */
+@property --bg-base {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #070A16;
+}
+@property --bg-band {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2448C9;
+}
+@property --bg-glow-a {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #C9D8F4;
+}
+@property --bg-glow-b {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #5B83E8;
+}
+
+/* Heavier film grain for the v2 gradient fields (visible on light areas too). */
+@layer components {
+  .grain-heavy::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.4' intercept='-0.7'/%3E%3CfeFuncG type='linear' slope='2.4' intercept='-0.7'/%3E%3CfeFuncB type='linear' slope='2.4' intercept='-0.7'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+
+/* v2: slow idle bob for the 3D glass icons. */
+@keyframes glass-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-2deg); }
+}
+.glass-float {
+  animation: glass-float 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-float { animation: none; }
+}
+
+/* v2 consistency: one section heading and one primary button for every section. */
+@utility text-section {
+  font-size: clamp(3.25rem, 10vw, 11rem);
+  line-height: 0.88;
+  font-weight: 300;
+  letter-spacing: -0.055em;
+}
+@layer components {
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    height: 3.5rem;
+    padding-inline: 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-snow);
+    color: var(--color-deep);
+    font-size: 17px;
+    font-weight: 500;
+    transition: background-color 200ms ease-out, transform 200ms ease-out;
+  }
+  .btn-primary:hover { background: var(--color-ice); }
+  .btn-primary:active { transform: scale(0.97); }
+}
+
+
+/* Tag stickers: a slow, gentle sway around their own tilt. */
+@keyframes tag-sway {
+  0%, 100% { transform: rotate(var(--tag-r, -6deg)) translateY(0); }
+  50% { transform: rotate(calc(var(--tag-r, -6deg) + 4deg)) translateY(-5px); }
+}
+.tag-sway {
+  transform: rotate(var(--tag-r, -6deg));
+  animation: tag-sway 5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tag-sway { animation: none; }
+}
+
+/* Mobile baseline: no tap flash, no font inflation, no tap delay, controls
+   don't select on long-press. */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea, select {
+  font-size: max(16px, 1em);
+}
+
+/* Hero: a light sheen crossing the sheet, and the magnifier swaying on "ideas". */
+@keyframes hero-sheen {
+  0%, 60% { transform: translateX(0) skewX(-12deg); }
+  100% { transform: translateX(520%) skewX(-12deg); }
+}
+.hero-sheen { animation: hero-sheen 9s cubic-bezier(0.77, 0, 0.175, 1) infinite 2.5s; }
+@keyframes hero-lens {
+  0%, 100% { transform: translate(0, 0) rotate(-8deg); }
+  50% { transform: translate(-0.06em, 0.05em) rotate(4deg); }
+}
+.hero-lens { animation: hero-lens 6s ease-in-out infinite; transform-origin: 30% 30%; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-sheen, .hero-lens { animation: none; }
+}

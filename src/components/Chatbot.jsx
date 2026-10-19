@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect, Suspense } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
-import Robot from "./Robot";
 
 // ── Design tokens (see DESIGN_SYSTEM.md) ─────────────────────────────────────
 const NAVY = "var(--color-navy)";
@@ -58,6 +56,7 @@ const TypingIndicator = () => (
 );
 
 // ── Main Component ────────────────────────────────────────────────────────────
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -411,37 +410,6 @@ const Chatbot = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Chat Tooltip ── */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: 20, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 20, scale: 0.9 }}
-            transition={{ delay: 1.5, duration: 0.4, type: "spring" }}
-            style={{
-              position: "fixed",
-              bottom: isMobile ? "32px" : "48px",
-              right: isMobile ? "130px" : "140px",
-              background: NAVY,
-              padding: "10px 16px",
-              borderRadius: "16px 16px 4px 16px",
-              // Faint light edge keeps the bubble visible over navy sections too
-              border: `1px solid ${base(15)}`,
-              color: BASE,
-              fontSize: "13px",
-              pointerEvents: "none",
-              zIndex: 9999,
-              boxShadow: "var(--shadow-md)",
-              whiteSpace: "nowrap",
-              fontFamily: "inherit"
-            }}
-          >
-            *Beep boop* 🤖 Need any help?
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* ── Floating Toggle Button ── */}
       <motion.button
         onClick={() => setIsOpen((v) => !v)}
@@ -451,15 +419,15 @@ const Chatbot = () => {
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         style={{
           position: "fixed",
-          bottom: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "12px" : "24px"),
-          right: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "12px" : "24px"),
-          width: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
-          height: isOpen ? "56px" : (isMobile ? "110px" : "130px"),
+          bottom: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "16px" : "28px"),
+          right: isOpen ? (isMobile ? "-100px" : "32px") : (isMobile ? "16px" : "28px"),
+          width: "56px",
+          height: "56px",
           borderRadius: "50%",
-          border: isOpen ? `1px solid ${navy(10)}` : "none",
-          background: isOpen ? base(90) : "transparent",
-          backdropFilter: isOpen ? "blur(12px)" : "none",
-          WebkitBackdropFilter: isOpen ? "blur(12px)" : "none",
+          border: isOpen ? `1px solid ${navy(10)}` : "1px solid rgba(242,245,251,0.35)",
+          background: isOpen ? base(90) : "rgba(14,20,48,0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
           boxShadow: isOpen && isHoveringButton
             ? "var(--shadow-lg)"
             : isOpen ? "var(--shadow-md)" : "none",
@@ -487,23 +455,20 @@ const Chatbot = () => {
               <CloseIcon />
             </motion.span>
           ) : (
-            <motion.div
-              key="robot"
+            <motion.span
+              key="chat"
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.6 }}
               transition={{ duration: 0.2 }}
-              style={{ width: "100%", height: "100%", overflow: "visible" }}
+              style={{ display: "grid", placeItems: "center", color: "#F2F5FB" }}
+              aria-label="Open chat"
             >
-              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                <Suspense fallback={null}>
-                  <ambientLight intensity={1.5} />
-                  <directionalLight position={[10, 10, 5]} intensity={3} />
-                  <directionalLight position={[-10, -10, -5]} intensity={1} />
-                  <Robot scale={0.026} position={[0, -0.4, 0]} isHero={false} />
-                </Suspense>
-              </Canvas>
-            </motion.div>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" />
+                <path d="M8.5 12h.01M12 12h.01M15.5 12h.01" />
+              </svg>
+            </motion.span>
           )}
         </AnimatePresence>
       </motion.button>
