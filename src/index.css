@@ -523,3 +523,14 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) {
   .hero-sheen, .hero-lens { animation: none; }
 }
+
+/* GlassEmblem: a light sheen sliding across the emblem's glass. */
+@keyframes emblem-sheen {
+  0%, 55% { transform: translateX(0) skewX(-14deg); }
+  100% { transform: translateX(220%) skewX(-14deg); }
+}
+.emblem-sheen { animation: emblem-sheen 5.5s cubic-bezier(0.77, 0, 0.175, 1) infinite 1s; }
+@media (prefers-reduced-motion: reduce) {
+  .emblem-sheen { animation: none; }
+}
+

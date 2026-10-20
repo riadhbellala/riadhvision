@@ -58,6 +58,7 @@ function Field({ className = "mt-14 h-[78vh] min-h-[560px] md:h-[70vh]" }) {
         duration: 14,
         ease: "linear",
         repeat: Infinity,
+        autoplay: false,
         onUpdate(t) {
           if (pointing.current) return;
           const b = el.getBoundingClientRect();
@@ -65,7 +66,13 @@ function Field({ className = "mt-14 h-[78vh] min-h-[560px] md:h-[70vh]" }) {
           y.set(b.height / 2 + Math.sin(t * 2) * b.height * 0.26);
         },
       });
-      return () => c.stop();
+      // Drift only while the field is on screen.
+      const io = new IntersectionObserver(([e]) => (e.isIntersecting ? c.play() : c.pause()));
+      io.observe(el);
+      return () => {
+        io.disconnect();
+        c.stop();
+      };
     },
     [reduce, x, y],
   );

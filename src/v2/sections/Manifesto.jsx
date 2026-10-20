@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Selected, Tag } from "../components/Selected";
 import Section from "../components/Section";
+import EmblemDrift from "../components/EmblemDrift";
 import Contours from "../components/lines/Contours";
 import NotchCard from "../components/NotchCard";
 import BeforeAfter from "./BeforeAfter";
@@ -34,7 +35,7 @@ function Manifesto() {
   );
 
   return (
-    <Section id="manifesto" lines={<Contours variant="sweep" />}>
+    <Section id="manifesto" lines={<Contours variant="sweep" />} backdrop={<EmblemDrift src="/blob.webp" side="right" />}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         <NotchCard
           className="lg:col-span-6"
@@ -48,7 +49,7 @@ function Manifesto() {
           }
         >
           <div className="px-7 pb-2 pt-2 md:px-10">
-            <h2 className="relative text-statement tone-head text-[clamp(2rem,3.4vw,3.25rem)]! leading-[1.15]!">
+            <h2 className="relative text-statement tone-head text-[clamp(2.6rem,3.4vw,3.25rem)]! leading-[1.15]!">
               I build where <Selected>design</Selected> and <Selected delay={0.35}>engineering</Selected> meet.
               <Tag rotate={-7} className="-top-12 right-[2%]">Strategy first</Tag>
               <Tag rotate={6} delay={0.2} className="-bottom-12 right-[6%]">Built to scale</Tag>

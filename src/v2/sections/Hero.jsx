@@ -6,23 +6,30 @@ const OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
 const IN_OUT = "cubic-bezier(0.77, 0, 0.175, 1)";
 import { useLenis } from "lenis/react";
 import OrbButton from "../components/OrbButton";
-import WorkLens from "../components/WorkLens";
+import { Folder } from "../../components/ui/folder";
+import { cover } from "../components/projectArt";
+import { projects } from "../../constants";
 import GlassIcon from "../components/GlassIcon";
 import ScanLens from "../components/ScanLens";
 import { TextPath } from "../../components/ui/text-path";
+
+// The three projects in the hero folder.
+const FOLDER = ["yashome", "batioil", "hydrame"]
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter(Boolean)
+  .map((p) => ({ key: p.slug, title: p.name.split(" — ")[0], image: cover(p), to: `/project/${p.slug}` }));
 
 const CONTACT = [
   { label: "riadh5726@gmail.com", short: "Email", href: "mailto:riadh5726@gmail.com" },
   { label: "WhatsApp +213 555 71 10 88", short: "WhatsApp", href: "https://wa.me/213555711088" },
 ];
 
-// The glass sheet: frosted, a bright top edge, a soft ink floor so the bottom
+// The glass sheet (tinted, no live backdrop blur: the background behind is
+// already soft, and blurring it every scroll frame was the heaviest cost): a bright top edge, a soft ink floor so the bottom
 // row and the lens captions stay readable over the light of the background.
 const SHEET = {
   background:
-    "radial-gradient(ellipse 60% 55% at 100% 100%, rgba(7,10,22,0.45), transparent), linear-gradient(to top, rgba(7,10,22,0.4), rgba(7,10,22,0) 40%), linear-gradient(135deg, rgba(242,245,251,0.10), rgba(242,245,251,0.03))",
-  WebkitBackdropFilter: "blur(28px) saturate(140%)",
-  backdropFilter: "blur(28px) saturate(140%)",
+    "radial-gradient(ellipse 60% 55% at 100% 100%, rgba(7,10,22,0.45), transparent), linear-gradient(to top, rgba(7,10,22,0.4), rgba(7,10,22,0) 40%), linear-gradient(135deg, rgba(242,245,251,0.12), rgba(242,245,251,0.04)), rgba(36,72,201,0.12)",
   border: "1px solid rgba(242,245,251,0.22)",
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35), 0 40px 120px rgba(7,10,22,0.35)",
 };
@@ -30,7 +37,7 @@ const SHEET = {
 /**
  * Hero: one big glass sheet floating over the moving background. Left: who
  * and what in large Swiss type, one sentence, one action. Right: real shipped
- * sites in a glass browser (WorkLens). Bottom left (clear of the chatbot): how
+ * work as a glass folder whose project pages fan out (Folder). Bottom left (clear of the chatbot): how
  * to reach me.
  *
  * Motion: see the entrance below. Reduced motion: everything simply shows.
@@ -42,14 +49,15 @@ function Hero() {
   // Entrance (GSAP), "vision" coming into focus: the hello line wipes in as the
   // logo turns into place; the headline's lines come into focus one after the other
   // (blur to sharp); the line under it rises; the CTA's glass orb rolls in from
-  // the far end to its rest; the browser is revealed from the bottom; the
+  // the far end to its rest; the folder fades up closed, and once everything is in, its projects fan out; the
   // contact row follows. Strong ease-out, no layout properties animated.
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
     const root = rootRef.current;
     const ctx = gsap.context(() => {
-      const orb = root.querySelector("[data-cta] [data-orb]");
-      const cta = root.querySelector("[data-cta] a");
+      // The CTA that is showing (phones get the small one).
+      const cta = [...root.querySelectorAll("[data-cta] a")].find((a) => a.offsetWidth > 0);
+      const orb = cta?.querySelector("[data-orb]");
       const roll = cta && orb ? cta.offsetWidth - orb.offsetWidth : 0;
 
       gsap
@@ -57,17 +65,11 @@ function Hero() {
         .from("[data-sheet]", { autoAlpha: 0, duration: 0.6, ease: "power1.out" })
         .fromTo("[data-hello]", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: IN_OUT, clearProps: "clipPath" }, 0.15)
         .from("[data-hello-logo]", { rotate: -120, scale: 0.8, autoAlpha: 0, duration: 0.9 }, 0.15)
-        .from("[data-headline] [data-line]", { autoAlpha: 0, filter: "blur(12px)", yPercent: 25, duration: 0.8, stagger: 0.12, clearProps: "filter" }, 0.35)
         .from("[data-sub]", { autoAlpha: 0, y: 16, duration: 0.7 }, 0.85)
         .from("[data-cta]", { autoAlpha: 0, duration: 0.4 }, 1)
-        .from(orb, { x: roll, rotate: 360, duration: 0.9, ease: IN_OUT, clearProps: "transform" }, 1)
-        .from("[data-cta] [data-orb-label]", { autoAlpha: 0, x: -10, duration: 0.5 }, 1.45)
-        .fromTo(
-          "[data-lens]",
-          { clipPath: "inset(100% 0% 0% 0% round 22px)", y: 24 },
-          { clipPath: "inset(0% 0% 0% 0% round 22px)", y: 0, duration: 1, ease: IN_OUT, clearProps: "clipPath,transform" },
-          0.55
-        )
+        .from(orb || [], { x: roll, rotate: 360, duration: 0.9, ease: IN_OUT, clearProps: "transform" }, 1)
+        .from(cta?.querySelector("[data-orb-label]") || [], { autoAlpha: 0, x: -10, duration: 0.5 }, 1.45)
+        .from("[data-lens]", { autoAlpha: 0, y: 30, duration: 0.9, clearProps: "transform" }, 0.9)
         .from("[data-contact]", { autoAlpha: 0, y: 12, duration: 0.6 }, 1.3)
     }, root);
     return () => {
@@ -107,9 +109,9 @@ function Hero() {
             </p>
             <h1
               data-headline
-              className="text-snow font-light leading-[0.88] md:leading-[0.9] tracking-[-0.05em] text-[clamp(3.4rem,15.5vw,5rem)] md:text-[clamp(3.5rem,8.4vw,9.5rem)]"
+              className="text-snow font-medium md:font-light leading-[0.88] md:leading-[0.9] tracking-[-0.05em] text-[clamp(3.4rem,15.5vw,5rem)] md:text-[clamp(3.5rem,8.4vw,9.5rem)]"
             >
-              <ScanLens lines={["Where ideas", "take shape."]} />
+              <ScanLens lines={["Where ideas", "take shape."]} typeDelay={0.35} />
             </h1>
 
             <p data-sub className="mt-6 md:mt-8 max-w-[36ch] text-snow text-[clamp(1.125rem,1.5vw,1.375rem)] leading-[1.5]">
@@ -117,9 +119,16 @@ function Hero() {
             </p>
 
             <div data-cta className="mt-8 md:mt-10 flex flex-wrap items-center gap-x-4 sm:gap-x-8 gap-y-4">
-              <OrbButton to="/start" icon="arrow">
-                Start a project
-              </OrbButton>
+              <span className="md:hidden">
+                <OrbButton to="/start" icon="arrow" size="sm">
+                  Start a project
+                </OrbButton>
+              </span>
+              <span className="hidden md:inline-flex">
+                <OrbButton to="/start" icon="arrow">
+                  Start a project
+                </OrbButton>
+              </span>
               {/* Phones: a round glass "see the work" button beside the CTA. */}
               <a
                 href="#work"
@@ -146,7 +155,8 @@ function Hero() {
           </div>
 
           <div data-lens>
-            <WorkLens />
+            {/* Selected work in a glass folder: the projects fan out of it. */}
+            <Folder items={FOLDER} label="Selected work" defaultOpen openDelay={2300} className="lg:mt-16 lg:scale-[1.2] origin-bottom" />
           </div>
         </div>
 

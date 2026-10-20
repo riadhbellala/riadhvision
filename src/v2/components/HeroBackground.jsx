@@ -70,8 +70,15 @@ function HeroBackground() {
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     }
 
+    // Page height is measured on resize, not every frame (reading it in the
+    // ticker forced a layout on every frame while other things animated).
+    let max = 0;
+    const measureMax = () => (max = document.documentElement.scrollHeight - window.innerHeight);
+    measureMax();
+    const pageRO = new ResizeObserver(measureMax);
+    pageRO.observe(document.body);
+
     function target() {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       return p * CYCLES * (FRAMES - 1);
     }
@@ -105,6 +112,7 @@ function HeroBackground() {
     portrait.addEventListener("change", onOrientation);
     return () => {
       gsap.ticker.remove(tick);
+      pageRO.disconnect();
       window.removeEventListener("resize", resize);
       portrait.removeEventListener("change", onOrientation);
     };

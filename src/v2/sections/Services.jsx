@@ -128,7 +128,7 @@ function Services() {
 
   return (
     <Section id="services">
-      <h2 data-title="chars" className="relative text-section text-snow">
+      <h2 data-title="rise" className="relative text-section text-snow">
         <Selected>Designed</Selected>, then built.
         <Tag rotate={-6} className="-top-12 right-0">Design with meaning</Tag>
       </h2>

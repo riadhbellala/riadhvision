@@ -50,7 +50,7 @@ function splitWords(heading) {
  *
  * Appear, once: section headings (h2.text-section) animate word by word, each
  * with a variant from data-title: "focus" (blur to sharp, default), "chars"
- * (words flip up), "spread" (words close up, scrubbed) or "slide" (words slide
+ * (words flip up), "rise" (words rise and fade in), "spread" (words close up, scrubbed) or "slide" (words slide
  * in leaning). Every other block in a section's content ([data-content] > *)
  * rises into place, staggered (transform + opacity only, so it stays cheap).
  *
@@ -82,6 +82,9 @@ export function useReveal() {
             ease: "none",
             scrollTrigger: { trigger: heading, start: "top 100%", end: "top 45%", scrub: 0.6 },
           });
+        } else if (variant === "rise") {
+          // Words rise into place and fade in, one after another.
+          gsap.from(units, { autoAlpha: 0, yPercent: 60, duration: 0.9, ease: OUT, stagger: 0.1, scrollTrigger: once });
         } else if (variant === "chars") {
           gsap.from(units, {
             autoAlpha: 0,
