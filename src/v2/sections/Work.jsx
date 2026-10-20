@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, useReducedMotion } from "framer-motion";
 import { Selected } from "../components/Selected";
@@ -6,6 +5,7 @@ import Section from "../components/Section";
 import Arc from "../components/lines/Arc";
 import Testimonials from "./Testimonials";
 import { projects } from "../../constants";
+import { EXTERNAL, siteOf } from "../components/links";
 import { cover, hasArtwork } from "../components/projectArt";
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -30,6 +30,8 @@ function Poster({ project, index }) {
   const reduce = useReducedMotion();
   const { title, kind } = split(project.name);
   const art = hasArtwork(project);
+  // The card opens the live site; work without a public site is not a link.
+  const site = siteOf(project);
 
   return (
     <motion.li
@@ -38,8 +40,8 @@ function Poster({ project, index }) {
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 1, ease: EASE }}
     >
-      <Link
-        to={`/project/${project.slug}`}
+      <a
+        {...(site ? { href: site, ...EXTERNAL, "aria-label": `Visit ${title}` } : { "aria-label": title })}
         className="group relative block aspect-[4/5] overflow-hidden rounded-[28px] border border-snow/15 bg-ink-2 outline-none focus-visible:ring-2 focus-visible:ring-snow"
       >
         <img
@@ -92,7 +94,7 @@ function Poster({ project, index }) {
             })}
           </ul>
         </div>
-      </Link>
+      </a>
       <p className="mt-4 flex justify-between text-small text-ice">
         <span>{project.category}</span>
         <span className="tabular-nums">{project.year}</span>

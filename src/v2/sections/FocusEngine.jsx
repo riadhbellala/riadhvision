@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { EXTERNAL, whatsapp } from "../components/links";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Section from "../components/Section";
@@ -182,9 +182,13 @@ function FocusEngine() {
                           );
                         })}
                       </ul>
-                      <Link to="/start" className="mt-6 btn-primary">
+                      <a
+                        href={whatsapp(`Hi Riadh, I'd like to build this: ${result.idea}`)}
+                        {...EXTERNAL}
+                        className="mt-6 btn-primary"
+                      >
                         Start this project
-                      </Link>
+                      </a>
                     </motion.div>
                   )}
                 </AnimatePresence>

@@ -1,8 +1,7 @@
 // Folder (adapted from the "FolderInteraction" component: plain JSX, framer-motion
 // instead of `motion` since it's the same API and already installed, RiadhVision
 // palette and glass). A folder whose pages fan out of it when it opens.
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
@@ -14,15 +13,50 @@ const POSES = [
 ];
 
 /**
- * `items` = [{ key, image, title, to }], up to three. The folder opens on
+ * `items` = [{ key, image, title, href }], up to three. The folder opens on
  * hover, focus or tap (and `defaultOpen` opens it once, `openDelay` ms after
  * mount); each page is
- * a link. `label` is shown in a bubble above. Reduced motion: no springs.
+ * a link. `openOnView` opens it once it scrolls into view instead. `label`
+ * is shown in a bubble above, once the pages have settled. Reduced motion: no springs.
  */
-export function Folder({ items = [], label, defaultOpen = false, openDelay = 900, className = "" }) {
+export function Folder({ items = [], label, defaultOpen = false, openDelay = 900, openOnView = false, className = "" }) {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(null);
+  // The label bubble shows only once the pages have fanned out and settled.
+  const [settled, setSettled] = useState(false);
+  const boxRef = useRef(null);
+
+  useEffect(
+    function settle() {
+      if (!open) {
+        setSettled(false);
+        return undefined;
+      }
+      const t = setTimeout(() => setSettled(true), reduce ? 0 : 1100);
+      return () => clearTimeout(t);
+    },
+    [open, reduce]
+  );
+
+  // openOnView: open once the folder has scrolled well into view.
+  useEffect(
+    function openWhenSeen() {
+      if (!openOnView) return undefined;
+      const io = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            setOpen(true);
+            io.disconnect();
+          }
+        },
+        { threshold: 0.6 }
+      );
+      io.observe(boxRef.current);
+      return () => io.disconnect();
+    },
+    [openOnView]
+  );
 
   useEffect(
     function openOnce() {
@@ -39,7 +73,13 @@ export function Folder({ items = [], label, defaultOpen = false, openDelay = 900
   return (
     <div className={`flex flex-col items-center select-none ${className}`}>
       {label && (
-        <div className="relative z-10 flex flex-col items-center mb-2">
+        <motion.div
+          className="relative z-10 flex flex-col items-center mb-2"
+          initial={false}
+          animate={settled ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+          aria-hidden={!settled}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={hovered ?? "label"}
@@ -55,14 +95,15 @@ export function Folder({ items = [], label, defaultOpen = false, openDelay = 900
           <svg width="18" height="11" viewBox="0 0 22 14" className="-mt-px" aria-hidden>
             <path d="M0 0 L22 0 L11 14 Z" fill="rgba(7,10,22,0.8)" />
           </svg>
-        </div>
+        </motion.div>
       )}
 
       <div
+        ref={boxRef}
         className="relative w-[300px] h-[250px] mt-[170px] cursor-pointer"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => {
-          setOpen(defaultOpen);
+          setOpen(defaultOpen || openOnView);
           setHovered(null);
         }}
         onClick={() => setOpen((v) => !v)}
@@ -93,10 +134,11 @@ export function Folder({ items = [], label, defaultOpen = false, openDelay = 900
               className="absolute top-4 left-1/2 -ml-[66px] w-[132px] h-[168px]"
               style={{ zIndex: pose.z }}
             >
-              <Link
-                to={item.to}
+              <a
+                href={item.href || undefined}
+                {...(item.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 tabIndex={open ? 0 : -1}
-                aria-label={`Open the ${item.title} case study`}
+                aria-label={`Visit ${item.title}`}
                 onMouseEnter={() => setHovered(item.title)}
                 onFocus={() => {
                   setOpen(true);
@@ -109,7 +151,7 @@ export function Folder({ items = [], label, defaultOpen = false, openDelay = 900
                 className="block w-full h-full overflow-hidden rounded-[14px] border border-snow/30 bg-ink-2 shadow-[0_10px_24px_rgba(7,10,22,0.45)] transition-transform duration-200 ease-out hover:scale-[1.06] focus-visible:ring-2 focus-visible:ring-snow outline-none"
               >
                 <img src={item.image} alt="" draggable="false" className="w-full h-full object-cover object-top" />
-              </Link>
+              </a>
             </motion.div>
           );
         })}

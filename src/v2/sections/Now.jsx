@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { EXTERNAL, START } from "../components/links";
 // eslint-disable-next-line no-unused-vars
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -78,12 +78,9 @@ function Now() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-small text-ice tabular-nums">Algeria: {time}</p>
-            <Link
-              to="/start"
-              className="btn-primary"
-            >
+            <a href={START} {...EXTERNAL} className="btn-primary">
               Start a project
-            </Link>
+            </a>
           </div>
         </TabCard>
       </div>

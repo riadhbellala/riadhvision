@@ -9,8 +9,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import Chatbot from "./components/Chatbot";
 
 // Pages other than Home load on demand, so the first visit only downloads Home.
-const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
-const ProjectRequest = lazy(() => import("./pages/ProjectRequest"));
 const Login = lazy(() => import("./pages/admin/Login"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -46,8 +44,6 @@ const App = () => {
           <Suspense fallback={<div className="min-h-screen bg-ink" />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/project/:slug" element={<ProjectDetails />} />
-            <Route path="/start" element={<ProjectRequest />} />
             <Route path="/admin/login" element={<Login />} />
             <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

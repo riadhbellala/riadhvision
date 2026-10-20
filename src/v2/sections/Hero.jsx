@@ -7,6 +7,7 @@ const IN_OUT = "cubic-bezier(0.77, 0, 0.175, 1)";
 import { useLenis } from "lenis/react";
 import OrbButton from "../components/OrbButton";
 import { Folder } from "../../components/ui/folder";
+import { EXTERNAL, START, siteOf } from "../components/links";
 import { cover } from "../components/projectArt";
 import { projects } from "../../constants";
 import GlassIcon from "../components/GlassIcon";
@@ -17,7 +18,7 @@ import { TextPath } from "../../components/ui/text-path";
 const FOLDER = ["yashome", "batioil", "hydrame"]
   .map((slug) => projects.find((p) => p.slug === slug))
   .filter(Boolean)
-  .map((p) => ({ key: p.slug, title: p.name.split(" — ")[0], image: cover(p), to: `/project/${p.slug}` }));
+  .map((p) => ({ key: p.slug, title: p.name.split(" — ")[0], image: cover(p), href: siteOf(p) }));
 
 const CONTACT = [
   { label: "riadh5726@gmail.com", short: "Email", href: "mailto:riadh5726@gmail.com" },
@@ -44,6 +45,8 @@ const SHEET = {
  */
 function Hero() {
   const lenis = useLenis();
+  // Desktop opens the folder after the entrance; phones open it on scroll.
+  const wide = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
   const rootRef = useRef(null);
 
   // Entrance (GSAP), "vision" coming into focus: the hello line wipes in as the
@@ -87,14 +90,14 @@ function Hero() {
     <section ref={rootRef} id="hero" data-tone="dark" className="relative px-3 pt-3 md:px-4 md:pt-4">
       <div
         data-sheet
-        className="relative z-10 overflow-hidden rounded-[32px] min-h-[calc(100svh-24px)] md:min-h-[max(680px,calc(100svh-32px))] px-5 pt-24 pb-6 md:px-14 md:pt-32 md:pb-10 flex flex-col origin-top"
+        className="relative z-10 overflow-hidden rounded-[32px] md:min-h-[max(680px,calc(100svh-32px))] px-5 pt-24 pb-6 md:px-14 md:pt-32 md:pb-10 flex flex-col origin-top"
         style={SHEET}
       >
         {/* A light sheen sweeps across the sheet every few seconds. */}
         <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
           <span className="hero-sheen absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-snow/10 to-transparent" />
         </div>
-        <div className="relative flex-1 grid grid-cols-1 gap-10 lg:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,30vw)] lg:gap-16 lg:items-center">
+        <div className="relative max-lg:contents flex-1 grid grid-cols-1 gap-10 lg:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,30vw)] lg:gap-16 lg:items-center">
           <div>
             {/* A short hello before the headline, the logo set in the line like a
                 letter. Phones: a compact glass chip. */}
@@ -120,12 +123,12 @@ function Hero() {
 
             <div data-cta className="mt-8 md:mt-10 flex flex-wrap items-center gap-x-4 sm:gap-x-8 gap-y-4">
               <span className="md:hidden">
-                <OrbButton to="/start" icon="arrow" size="sm">
+                <OrbButton href={START} {...EXTERNAL} icon="arrow" size="sm">
                   Start a project
                 </OrbButton>
               </span>
               <span className="hidden md:inline-flex">
-                <OrbButton to="/start" icon="arrow">
+                <OrbButton href={START} {...EXTERNAL} icon="arrow">
                   Start a project
                 </OrbButton>
               </span>
@@ -154,15 +157,16 @@ function Hero() {
             </div>
           </div>
 
-          <div data-lens>
+          {/* Phones: after the contact row, opening as it scrolls into view. */}
+          <div data-lens className="max-lg:order-2 max-lg:mt-4">
             {/* Selected work in a glass folder: the projects fan out of it. */}
-            <Folder items={FOLDER} label="Selected work" defaultOpen openDelay={2300} className="lg:mt-16 lg:scale-[1.2] origin-bottom" />
+            <Folder items={FOLDER} label="Selected work" defaultOpen={wide} openOnView={!wide} openDelay={2300} className="lg:mt-16 lg:scale-[1.2] origin-bottom" />
           </div>
         </div>
 
         {/* Contact. Phones: two glass pills and a line under them. */}
-        <div data-contact className="relative mt-10 md:mt-14 flex flex-wrap items-center gap-2 md:gap-8 text-small text-ice">
-          <ul className="contents">
+        <div data-contact className="max-lg:order-1 relative mt-10 md:mt-14 flex flex-wrap items-center gap-2 md:gap-8 text-small text-ice">
+          <ul className="max-md:hidden contents">
             {CONTACT.map(function renderContact(item) {
               return (
                 <li key={item.href}>

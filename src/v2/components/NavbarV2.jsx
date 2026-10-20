@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { useLenis } from "lenis/react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import GlassIcon from "./GlassIcon";
 import OrbButton from "./OrbButton";
+import { EXTERNAL, START, siteOf } from "./links";
 import { cover, hasArtwork } from "./projectArt";
 import { projects, servicesData } from "../../constants";
 
@@ -37,14 +37,14 @@ const MENUS = [
     target: "#services",
     columns: [
       { title: "Services", big: true, links: servicesData.map((s) => ({ label: s.title, target: "#services" })) },
-      { title: "Also", links: [{ label: "Describe your idea", target: "#focus-engine" }, { label: "Start a project", to: "/start" }] },
+      { title: "Also", links: [{ label: "Describe your idea", target: "#focus-engine" }, { label: "Start a project", href: START }] },
     ],
   },
   {
     label: "Contact",
     target: "#contact",
     columns: [
-      { title: "Contact", big: true, links: [{ label: "Start a project", to: "/start" }, { label: "Write an email", href: "mailto:riadh5726@gmail.com" }] },
+      { title: "Contact", big: true, links: [{ label: "Start a project", href: START }, { label: "Write an email", href: "mailto:riadh5726@gmail.com" }] },
       {
         title: "Elsewhere",
         links: [
@@ -123,12 +123,6 @@ function NavbarV2() {
     const cls = big
       ? "block text-snow font-light tracking-[-0.03em] leading-tight text-[clamp(1.5rem,2.2vw,2rem)] hover:text-ice transition-colors duration-150"
       : "block text-small text-ice hover:text-snow transition-colors duration-150";
-    if (link.to)
-      return (
-        <RouterLink to={link.to} className={cls} onClick={() => setOpen(null)}>
-          {link.label}
-        </RouterLink>
-      );
     if (link.href)
       return (
         <a href={link.href} className={cls} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>
@@ -225,7 +219,7 @@ function NavbarV2() {
             <div className="flex items-center gap-4" onMouseEnter={hide}>
               <p className="hidden xl:block whitespace-nowrap text-small tabular-nums text-ice">Algeria {time}</p>
               <span className="hidden sm:inline-flex">
-                <OrbButton to="/start" size="sm" className="mr-1">
+                <OrbButton href={START} {...EXTERNAL} size="sm" className="mr-1">
                   Start a project
                 </OrbButton>
               </span>
@@ -294,12 +288,12 @@ function NavbarV2() {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3, ease: EASE, delay: 0.04 * i }}
                             >
-                              <RouterLink to={`/project/${p.slug}`} onClick={() => setOpen(null)} className="group block">
+                              <a href={siteOf(p) || "#work"} {...(siteOf(p) ? EXTERNAL : {})} onClick={() => setOpen(null)} className="group block">
                                 <span className="block aspect-[4/5] overflow-hidden rounded-[14px] border border-snow/15">
                                   <img src={cover(p)} alt="" loading="lazy" className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.05]" />
                                 </span>
                                 <span className="block mt-2 text-small text-snow">{p.name.split(" — ")[0]}</span>
-                              </RouterLink>
+                              </a>
                             </motion.li>
                           );
                         })}
@@ -339,7 +333,7 @@ function NavbarV2() {
                     );
                   })}
                   <li className="pt-4">
-                    <OrbButton to="/start" onClick={() => setMobile(false)}>
+                    <OrbButton href={START} {...EXTERNAL} onClick={() => setMobile(false)}>
                       Start a project
                     </OrbButton>
                   </li>

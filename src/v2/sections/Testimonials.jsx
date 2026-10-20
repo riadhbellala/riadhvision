@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import GlassIcon from "../components/GlassIcon";
 import NotchCard from "../components/NotchCard";
 import { projects } from "../../constants";
 import { cover } from "../components/projectArt";
+import { EXTERNAL, siteOf } from "../components/links";
 
 // SAMPLE quotes written for the layout: replace them with your clients' real
 // words (or get each client's OK) before going live. `slug` links the quote to its project.
@@ -196,8 +196,8 @@ function Testimonials() {
               </div>
 
               {project && (
-                <Link
-                  to={`/project/${project.slug}`}
+                <a
+                  {...(siteOf(project) ? { href: siteOf(project), ...EXTERNAL } : {})}
                   draggable="false"
                   className="lg:col-span-5 group block rounded-[22px] border border-snow/20 bg-snow/8 p-2 transition-colors duration-200 hover:bg-snow/12"
                 >
@@ -216,10 +216,10 @@ function Testimonials() {
                       {project.name.split(" — ")[0]}
                     </span>
                     <span className="text-ice group-hover:text-snow transition-colors">
-                      See the project →
+                      Visit the site →
                     </span>
                   </p>
-                </Link>
+                </a>
               )}
             </motion.div>
           </AnimatePresence>

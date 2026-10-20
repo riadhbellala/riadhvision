@@ -1,48 +1,12 @@
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import Section from "../components/Section";
 import { TextPath } from "../../components/ui/text-path";
 import Now from "./Now";
 import OrbButton from "../components/OrbButton";
+import { EXTERNAL, START } from "../components/links";
 
 const EMAIL = "riadh5726@gmail.com";
-const KINDS = [
-  "Website",
-  "Online store",
-  "Web app",
-  "Redesign",
-  "Not sure yet",
-];
-
-function mailto(picked) {
-  const subject = picked.length
-    ? `New project: ${picked.join(" + ")}`
-    : "New project";
-  const body = `Hi Riadh,\n\nI'd like to talk about ${picked.length ? `a ${picked.join(" + ").toLowerCase()}` : "a project"}.\n\nAbout the project:\n\nTimeline:\n\nBudget range:\n`;
-  return `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-// 11 — Contact: one centred moment. Pick what you need, the email writes itself.
+// 11 — Contact: one centred moment, one button straight to WhatsApp.
 function Contact() {
-  const [picked, setPicked] = useState([]);
-  const [copied, setCopied] = useState(false);
-
-  function toggle(kind) {
-    setPicked((p) =>
-      p.includes(kind) ? p.filter((k) => k !== kind) : [...p, kind],
-    );
-  }
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      window.location.href = `mailto:${EMAIL}`;
-    }
-  }
-
   return (
     <Section id="contact">
       {/* A curved glass blade sweeping behind the content, off the right edge (desktop). */}
@@ -87,66 +51,18 @@ function Contact() {
           Let’s talk.
         </h2>
 
-        <fieldset className="mt-12">
-          <legend className="text-body text-ice mb-5">What do you need?</legend>
-          <div className="flex flex-wrap justify-center gap-3">
-            {KINDS.map(function renderKind(kind) {
-              const on = picked.includes(kind);
-              return (
-                <button
-                  key={kind}
-                  type="button"
-                  aria-pressed={on}
-                  onClick={() => toggle(kind)}
-                  className={`h-12 px-5 rounded-pill text-body border transition-[background-color,color,border-color,transform] duration-200 ease-out active:scale-[0.97] ${
-                    on
-                      ? "bg-snow text-deep border-snow"
-                      : "glass-pill text-snow hover:bg-snow/15"
-                  }`}
-                >
-                  {kind}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-
-        <div className="mt-10 flex flex-col sm:flex-row items-center gap-3">
-          <OrbButton href={mailto(picked)} icon="paper-plane">
-            Write the email
+        {/* One step: the button opens WhatsApp with a ready message. */}
+        <div className="mt-12 flex flex-col items-center gap-5">
+          <OrbButton href={START} {...EXTERNAL} icon="paper-plane">
+            Message me on WhatsApp
           </OrbButton>
-          <div className="glass-pill inline-flex items-center gap-2 h-14 pl-6 pr-2 text-body text-snow">
-            {EMAIL}
-            <button
-              type="button"
-              onClick={copy}
-              className="h-10 px-4 rounded-pill bg-ink/50 text-small text-snow transition-colors hover:bg-ink/80"
-              aria-live="polite"
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
+          <p className="text-body text-ice">
+            Or email{" "}
+            <a href={`mailto:${EMAIL}`} className="text-snow underline underline-offset-4 decoration-snow/40 hover:decoration-snow">
+              {EMAIL}
+            </a>
+          </p>
         </div>
-
-        <p className="mt-8 text-body text-ice">
-          Or{" "}
-          <a
-            href="https://wa.me/213555711088"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-snow underline underline-offset-4 decoration-snow/40 hover:decoration-snow"
-          >
-            message me on WhatsApp
-          </a>{" "}
-          or{" "}
-          <RouterLink
-            to="/start"
-            className="text-snow underline underline-offset-4 decoration-snow/40 hover:decoration-snow"
-          >
-            fill in the project brief
-          </RouterLink>
-          .
-        </p>
       </div>
       <Now />
     </Section>
