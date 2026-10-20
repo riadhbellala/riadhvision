@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
  * section scrolls (scrubbed, so it reverses on the way back up). Use as a
  * Section `backdrop`. `side` picks the edge. Still with reduced motion.
  */
-function EmblemDrift({ src = "/emblem.webp", side = "left", className = "" }) {
+function EmblemDrift({ src = "/emblem.webp", side = "left", top = "20%", opacity = 0.4, className = "" }) {
   const ref = useRef(null);
 
   useLayoutEffect(() => {
@@ -42,7 +42,8 @@ function EmblemDrift({ src = "/emblem.webp", side = "left", className = "" }) {
         src={src}
         alt=""
         draggable="false"
-        className={`absolute top-[20%] w-[60vw] max-w-[640px] md:w-[38vw] opacity-40 will-change-transform ${
+        style={{ top, opacity }}
+        className={`absolute w-[60vw] max-w-[640px] md:w-[38vw] will-change-transform ${
           side === "left" ? "-left-[18vw] md:-left-[10vw]" : "-right-[18vw] md:-right-[10vw]"
         }`}
       />

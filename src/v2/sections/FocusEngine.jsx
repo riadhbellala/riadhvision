@@ -3,7 +3,6 @@ import { EXTERNAL, whatsapp } from "../components/links";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Section from "../components/Section";
-import GlassEmblem from "../components/GlassEmblem";
 import GlassIcon from "../components/GlassIcon";
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -90,15 +89,9 @@ function FocusEngine() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-12 lg:gap-20 items-center">
             <div>
-              {/* The vortex woven through the title: behind some letters, glass over others. */}
-              <GlassEmblem
-                src="/emblem.webp"
-                className="w-[36vw] h-[36vw] max-w-[170px] max-h-[170px] right-[-4%] top-[-30%] md:max-w-none md:max-h-none md:right-auto md:w-[20vw] md:h-[20vw] md:left-[-16.5vw] md:top-[-34%]"
-              >
-                <h2 data-title="slide" className="text-section text-[clamp(3rem,7vw,7.5rem)]! text-snow max-w-[12ch]">
-                  Describe your idea.
-                </h2>
-              </GlassEmblem>
+              <h2 data-title="slide" className="text-section text-[clamp(3rem,7vw,7.5rem)]! text-snow max-w-[12ch]">
+                Describe your idea.
+              </h2>
               <p className="text-body text-ice mt-6 max-w-[38ch]">
                 One sentence is enough. You get a first shape of the project
                 here, then we refine it together on a call.

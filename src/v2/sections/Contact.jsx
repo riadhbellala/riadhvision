@@ -1,4 +1,5 @@
 import Section from "../components/Section";
+import EmblemDrift from "../components/EmblemDrift";
 import { TextPath } from "../../components/ui/text-path";
 import Now from "./Now";
 import OrbButton from "../components/OrbButton";
@@ -8,7 +9,11 @@ const EMAIL = "riadh5726@gmail.com";
 // 11 — Contact: one centred moment, one button straight to WhatsApp.
 function Contact() {
   return (
-    <Section id="contact">
+    <Section
+      id="contact"
+      // The logo shape, large and soft in the background on the left, turning as you scroll.
+      backdrop={<EmblemDrift src="/emblem.webp" side="left" top="6%" opacity={0.55} />}
+    >
       {/* A curved glass blade sweeping behind the content, off the right edge (desktop). */}
       <div
         aria-hidden
