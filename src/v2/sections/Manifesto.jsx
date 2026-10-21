@@ -100,7 +100,7 @@ function Manifesto() {
           </div>
         </NotchCard>
 
-        <div data-scroll="grow" className="lg:col-span-6">
+        <div className="lg:col-span-6">
           <BeforeAfter />
         </div>
       </div>

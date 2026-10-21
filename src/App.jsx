@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Home from "./pages/Home";
 import ScrollToTop from "./components/ScrollToTop";
-import Chatbot from "./components/Chatbot";
+// Chatbot is kept in code (components/Chatbot.jsx) but not shown for now.
 
 // Pages other than Home load on demand, so the first visit only downloads Home.
 const Login = lazy(() => import("./pages/admin/Login"));
@@ -49,7 +49,6 @@ const App = () => {
             <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           </Routes>
           </Suspense>
-          <Chatbot />
         </Router>
       </div>
     </ReactLenis>

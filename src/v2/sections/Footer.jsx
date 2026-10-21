@@ -6,7 +6,6 @@ const LINKS = [
   { label: "About", target: "#manifesto" },
   { label: "Services", target: "#services" },
   { label: "Work", target: "#work" },
-  { label: "Process", target: "#process" },
   { label: "Contact", target: "#contact" },
 ];
 
