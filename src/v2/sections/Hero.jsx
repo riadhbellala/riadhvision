@@ -9,8 +9,7 @@ import OrbButton from "../components/OrbButton";
 import { Folder } from "../../components/ui/folder";
 import { EXTERNAL, START, siteOf } from "../components/links";
 import { cover } from "../components/projectArt";
-import { projects } from "../../constants";
-import GlassIcon from "../components/GlassIcon";
+import { projects } from "../components/shownProjects";
 import ScanLens from "../components/ScanLens";
 import { TextPath } from "../../components/ui/text-path";
 
@@ -67,7 +66,6 @@ function Hero() {
         .timeline({ defaults: { ease: OUT } })
         .from("[data-sheet]", { autoAlpha: 0, duration: 0.6, ease: "power1.out" })
         .fromTo("[data-hello]", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: IN_OUT, clearProps: "clipPath" }, 0.15)
-        .from("[data-hello-logo]", { rotate: -120, scale: 0.8, autoAlpha: 0, duration: 0.9 }, 0.15)
         .from("[data-sub]", { autoAlpha: 0, y: 16, duration: 0.7 }, 0.85)
         .from("[data-cta]", { autoAlpha: 0, duration: 0.4 }, 1)
         .from(orb || [], { x: roll, rotate: 360, duration: 0.9, ease: IN_OUT, clearProps: "transform" }, 1)
@@ -103,11 +101,8 @@ function Hero() {
                 letter. Phones: a compact glass chip. */}
             <p
               data-hello
-              className="mb-6 text-snow max-md:inline-flex max-md:items-center max-md:rounded-pill max-md:border max-md:border-snow/20 max-md:bg-snow/8 max-md:py-1 max-md:pl-1.5 max-md:pr-4 max-md:text-small md:text-body-lg"
+              className="mb-6 text-snow max-md:inline-flex max-md:items-center max-md:rounded-pill max-md:border max-md:border-snow/20 max-md:bg-snow/8 max-md:py-1.5 max-md:px-4 max-md:text-small md:text-body-lg"
             >
-              <span data-hello-logo aria-hidden className="relative inline-block align-middle w-7 h-7 md:w-8 md:h-8 mr-2 md:-mt-1">
-                <GlassIcon name="logo" size={72} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[52px] md:w-[60px] md:h-[60px] max-w-none" />
-              </span>
               Hi, I’m Riadh.<span className="hidden md:inline text-ice"> I design and build for the web.</span>
             </p>
             <h1

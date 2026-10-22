@@ -4,7 +4,7 @@ import { Selected } from "../components/Selected";
 import Section from "../components/Section";
 import Arc from "../components/lines/Arc";
 import Testimonials from "./Testimonials";
-import { projects } from "../../constants";
+import { projects } from "../components/shownProjects";
 import { EXTERNAL, siteOf } from "../components/links";
 import { cover, hasArtwork } from "../components/projectArt";
 

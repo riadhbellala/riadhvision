@@ -11,10 +11,24 @@ const EXAMPLES = [
   "An online store for my clothing brand",
   "A booking app for my clinic",
   "A website for my restaurant",
+  "A mobile app for my gym",
+  "A CRM for my sales team",
 ];
 
 // Rough scoping by keywords: what kind of build it is and what it usually includes.
 const KINDS = [
+  {
+    test: /crm|clients?\b|leads?|pipeline|sales team|follow.?ups?/i,
+    type: "Custom CRM",
+    icon: "layers",
+    parts: ["Clients and pipeline", "Follow-up reminders", "Reports and dashboards", "Roles for your team"],
+  },
+  {
+    test: /mobile|ios|android|iphone|play store|app store|phone app/i,
+    type: "Mobile app",
+    icon: "chat-ai",
+    parts: ["iOS and Android from one codebase", "Accounts and push notifications", "Admin to manage content", "App Store and Google Play launch"],
+  },
   {
     test: /shop|store|boutique|sell|e-?commerce|product|cart|clothing|sneaker/i,
     type: "Online store",
@@ -27,7 +41,7 @@ const KINDS = [
     ],
   },
   {
-    test: /app|saas|platform|dashboard|booking|appointment|rental|crm|portal|tenant|clinic|hospital|manage/i,
+    test: /app|saas|platform|dashboard|booking|appointment|rental|portal|tenant|clinic|hospital|manage/i,
     type: "Web app",
     icon: "layers",
     parts: [

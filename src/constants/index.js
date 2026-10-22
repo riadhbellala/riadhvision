@@ -3,7 +3,7 @@ export const servicesData = [
   {
     title: "Full-Stack Development",
     description:
-      "From a fast landing page to a complex web application, I build complete digital products with clean architecture, optimized databases, and seamless UI — reliable at every layer.",
+      "Complete web products, from database to interface, built clean and reliable.",
     items: [
       {
         title: "Backend Engineering",
@@ -22,7 +22,7 @@ export const servicesData = [
   {
     title: "E-Commerce & SaaS Solutions",
     description:
-      "From subscription workflows to multi-tenant systems, each product is engineered for performance and effortless management at any scale.",
+      "Online stores and SaaS platforms that stay fast and easy to manage as they grow.",
     items: [
       {
         title: "E-commerce Platforms",
@@ -41,7 +41,7 @@ export const servicesData = [
   {
     title: "Landing Pages & Vitrine Sites",
     description:
-      "Premium showcase websites and high-converting landing pages that capture attention, build trust, and turn visitors into clients.",
+      "Premium websites and landing pages that build trust and turn visitors into clients.",
     items: [
       {
         title: "Brand Experiences",
@@ -60,7 +60,7 @@ export const servicesData = [
   {
     title: "UI/UX Design & Performance",
     description:
-      "Through focused design thinking and performance audits, your product becomes faster, more intuitive, and easier to scale — without disrupting core functionality.",
+      "Clearer interfaces and faster products, without breaking what already works.",
     items: [
       {
         title: "UI/UX Design",
@@ -74,6 +74,24 @@ export const servicesData = [
         title: "Code Refactoring",
         description: "(Structure Cleanup, Best Practices, Optimization)",
       },
+    ],
+  },
+  {
+    title: "Mobile Apps",
+    description: "iOS and Android apps that feel native, from one shared codebase.",
+    items: [
+      { title: "Cross-platform", description: "(React Native, Expo, iOS & Android)" },
+      { title: "Native Feel", description: "(Smooth Gestures, Push Notifications)" },
+      { title: "Store Launch", description: "(App Store & Google Play Publishing)" },
+    ],
+  },
+  {
+    title: "Custom CRM",
+    description: "A CRM shaped around how your team sells, follows up and reports.",
+    items: [
+      { title: "Clients & Pipeline", description: "(Leads, Deals, Follow-ups)" },
+      { title: "Automation", description: "(Reminders, Emails, Workflows)" },
+      { title: "Reports", description: "(Dashboards, Exports, Team Roles)" },
     ],
   },
 ];

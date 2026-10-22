@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Section from "../components/Section";
-import EmblemDrift from "../components/EmblemDrift";
 import { TextPath } from "../../components/ui/text-path";
 import Now from "./Now";
 import OrbButton from "../components/OrbButton";
@@ -36,11 +35,7 @@ function Contact() {
   }
 
   return (
-    <Section
-      id="contact"
-      // The logo shape, large and soft in the background on the left, turning as you scroll.
-      backdrop={<EmblemDrift src="/emblem.webp" side="left" top="6%" opacity={0.55} imgClassName="max-md:top-[0%]! max-md:w-[40vw]! max-md:opacity-45!" />}
-    >
+    <Section id="contact">
       {/* A curved glass blade sweeping behind the content, off the right edge (desktop). */}
       <div
         aria-hidden

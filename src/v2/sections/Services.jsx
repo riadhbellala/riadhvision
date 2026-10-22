@@ -28,7 +28,7 @@ const LENSES = [
 ];
 
 // One glass icon per service, in servicesData order.
-const ICONS = ["nodes", "bag", "browser", "cursor"];
+const ICONS = ["nodes", "bag", "browser", "cursor", "chat-ai", "layers"];
 
 const RIBBON =
   "rounded-pill py-2 text-[clamp(0.95rem,1.4vw,1.2rem)] font-medium tracking-[-0.01em] shadow-[0_10px_30px_rgba(7,10,22,0.35)]";

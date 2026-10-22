@@ -6,7 +6,8 @@ import GlassIcon from "./GlassIcon";
 import OrbButton from "./OrbButton";
 import { EXTERNAL, START, siteOf } from "./links";
 import { cover, hasArtwork } from "./projectArt";
-import { projects, servicesData } from "../../constants";
+import { servicesData } from "../../constants";
+import { projects } from "./shownProjects";
 
 const EASE = [0.23, 1, 0.32, 1];
 

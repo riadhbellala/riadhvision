@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import GlassIcon from "../components/GlassIcon";
 import NotchCard from "../components/NotchCard";
-import { projects } from "../../constants";
+import EmblemDrift from "../components/EmblemDrift";
+import { projects } from "../components/shownProjects";
 import { cover } from "../components/projectArt";
 import { EXTERNAL, siteOf } from "../components/links";
 
@@ -100,7 +101,11 @@ function Testimonials() {
   };
 
   return (
-    <div id="testimonials" className="mt-24 md:mt-32">
+    <div id="testimonials" className="relative isolate mt-24 md:mt-32">
+      {/* The glass loop, large and soft in the background on the left, turning as you scroll. */}
+      <div aria-hidden className="absolute -z-10 inset-y-0 left-[calc(50%-50vw)] w-screen pointer-events-none">
+        <EmblemDrift src="/loop.webp" side="left" top="10%" opacity={0.55} imgClassName="max-md:top-[0%]! max-md:w-[40vw]! max-md:opacity-45!" />
+      </div>
       <div>
         <h3
           className="text-snow font-light leading-none tracking-[-0.04em]"
