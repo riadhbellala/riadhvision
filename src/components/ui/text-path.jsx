@@ -223,7 +223,18 @@ function TextPathOpen({ text, curve, path: pathOverride, viewBox: viewBoxOverrid
   }, [playing, pathD, displayText, duration, repeats, direction, fontSize, fontWeight, letterSpacing]);
 
   return (
-    <svg ref={setHostRef} viewBox={viewBox} role="img" aria-label={ariaLabel ?? trimmed} className={`block h-auto w-full overflow-visible ${className}`}>
+    <svg
+      ref={setHostRef}
+      viewBox={viewBox}
+      role="img"
+      aria-label={ariaLabel ?? trimmed}
+      className={`block h-auto w-full overflow-visible ${className}`}
+      // Fade the ends so the loop never shows words cut mid-letter.
+      style={{
+        maskImage: "linear-gradient(90deg, transparent, black 18%, black 82%, transparent)",
+        WebkitMaskImage: "linear-gradient(90deg, transparent, black 18%, black 82%, transparent)",
+      }}
+    >
       <path id={pathId} d={pathD} fill="none" stroke={showPath ? pathColor ?? "rgba(242,245,251,0.3)" : "none"} strokeWidth={showPath ? pathWidth : 0} strokeLinecap="round" vectorEffect="non-scaling-stroke" aria-hidden="true" />
       <text style={{ fontSize, fontWeight, letterSpacing: `${letterSpacing}em`, fill: fill ?? "currentColor" }} className="font-[inherit] [dominant-baseline:central]">
         <textPath ref={textPathRef} href={`#${pathId}`} startOffset="0" method="align" spacing="exact">

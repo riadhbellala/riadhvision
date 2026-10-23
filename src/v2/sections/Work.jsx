@@ -42,7 +42,7 @@ function Poster({ project, index }) {
     >
       <a
         {...(site ? { href: site, ...EXTERNAL, "aria-label": `Visit ${title}` } : { "aria-label": title })}
-        className="group relative block aspect-[4/5] overflow-hidden rounded-[28px] border border-snow/15 bg-ink-2 outline-none focus-visible:ring-2 focus-visible:ring-snow"
+        className="group relative block aspect-[4/5] overflow-hidden rounded-[24px] border border-snow/15 bg-ink-2 outline-none focus-visible:ring-2 focus-visible:ring-snow"
       >
         <img
           src={cover(project)}
@@ -115,17 +115,15 @@ function Work() {
       <h2 data-title="spread" className="text-section text-snow">
         <Selected>Selected</Selected> work.
       </h2>
-      <div className="mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-12 gap-6 md:items-end">
-        <p
-          className="md:col-span-7 text-snow font-light leading-[1.25] tracking-[-0.02em]"
-          style={{ fontSize: "clamp(1.35rem, 2.4vw, 2.125rem)" }}
-        >
-          Real sites and platforms, shipped for brands in Algeria and abroad: real estate, retail, industry and health.
-        </p>
-        <p className="md:col-span-4 md:col-start-9 text-body-lg text-ice">
-          {projects.length} projects from {YEARS[0]} to {YEARS[1]}. Open any of them to see how it was made.
-        </p>
-      </div>
+      <p
+        className="mt-8 md:mt-10 max-w-[30ch] text-snow font-light leading-[1.25] tracking-[-0.02em]"
+        style={{ fontSize: "clamp(1.35rem, 2.4vw, 2.125rem)" }}
+      >
+        Real sites and platforms, shipped for brands in Algeria and abroad.
+      </p>
+      <p className="mt-4 text-body text-ice">
+        {projects.length} projects, {YEARS[0]}–{YEARS[1]}. Each one opens the live site.
+      </p>
 
       {/* Two columns; the right one starts lower, so the posters stagger. */}
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">

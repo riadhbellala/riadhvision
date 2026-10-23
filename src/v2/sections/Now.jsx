@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { EXTERNAL, START } from "../components/links";
+import OrbButton from "../components/OrbButton";
 // eslint-disable-next-line no-unused-vars
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -50,7 +51,7 @@ function Now() {
 
   return (
     <div className="mt-24 md:mt-32 text-left">
-      <h3 className="text-snow font-light leading-none tracking-[-0.04em]" style={{ fontSize: "clamp(2.25rem, 4.5vw, 4.5rem)" }}>
+      <h3 className="text-subsection text-snow">
         Right now.
       </h3>
 
@@ -78,9 +79,9 @@ function Now() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-small text-ice tabular-nums">Algeria: {time}</p>
-            <a href={START} {...EXTERNAL} className="btn-primary">
+            <OrbButton href={START} {...EXTERNAL} size="sm">
               Start a project
-            </a>
+            </OrbButton>
           </div>
         </TabCard>
       </div>

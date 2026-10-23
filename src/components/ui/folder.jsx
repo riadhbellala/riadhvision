@@ -19,7 +19,7 @@ const POSES = [
  * a link. `openOnView` opens it once it scrolls into view instead. `label`
  * is shown in a bubble above, once the pages have settled. Reduced motion: no springs.
  */
-export function Folder({ items = [], label, defaultOpen = false, openDelay = 900, openOnView = false, className = "" }) {
+export function Folder({ items = [], label, defaultOpen = false, openDelay = 900, openOnView = false, viewThreshold = 0.6, className = "" }) {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(null);
@@ -50,12 +50,14 @@ export function Folder({ items = [], label, defaultOpen = false, openDelay = 900
             io.disconnect();
           }
         },
-        { threshold: 0.6 }
+        // The viewport counts a little past its bottom edge, so the pages fan
+        // out into the visible space above the folder even on short screens.
+        { threshold: viewThreshold, rootMargin: "0px 0px 35% 0px" }
       );
       io.observe(boxRef.current);
       return () => io.disconnect();
     },
-    [openOnView]
+    [openOnView, viewThreshold]
   );
 
   useEffect(

@@ -89,7 +89,7 @@ function Field({ className = "mt-14 h-[78vh] min-h-[560px] md:h-[70vh]" }) {
       ref={ref}
       onPointerMove={move}
       onPointerLeave={() => (pointing.current = false)}
-      className={`relative ${className} overflow-hidden rounded-[28px] border border-snow/15 bg-ink/50 cursor-none touch-pan-y`}
+      className={`relative ${className} overflow-hidden rounded-[24px] border border-snow/15 bg-ink/50 cursor-none touch-pan-y`}
       aria-label="Rough versus refined: move the lens over the problems to see the fixes"
       role="img"
     >

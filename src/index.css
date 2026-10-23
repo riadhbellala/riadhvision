@@ -180,8 +180,8 @@
   --font-serif: "Instrument Serif", serif;
 
   --radius-pill: 9999px;
-  --radius-panel: 28px;
-  --radius-card: 20px;
+  --radius-panel: 24px;
+  --radius-card: 16px;
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -202,8 +202,16 @@
   text-transform: uppercase;
 }
 
+/* Title of a block inside a section ("In their words.", "Right now."). */
+@utility text-subsection {
+  font-size: clamp(2.25rem, 4.5vw, 4.5rem);
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
 @utility text-label {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: 0.14em;

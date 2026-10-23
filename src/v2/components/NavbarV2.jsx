@@ -28,18 +28,18 @@ const MENUS = [
     ],
   },
   {
-    label: "Work",
-    target: "#work",
-    work: true,
-    columns: [{ title: "Work", big: true, links: [{ label: "Selected work", target: "#work" }, { label: "In their words", target: "#testimonials" }] }],
-  },
-  {
     label: "Services",
     target: "#services",
     columns: [
       { title: "Services", big: true, links: servicesData.map((s) => ({ label: s.title, target: "#services" })) },
       { title: "Also", links: [{ label: "Describe your idea", target: "#focus-engine" }, { label: "Start a project", href: START }] },
     ],
+  },
+  {
+    label: "Work",
+    target: "#work",
+    work: true,
+    columns: [{ title: "Work", big: true, links: [{ label: "Selected work", target: "#work" }, { label: "In their words", target: "#testimonials" }] }],
   },
   {
     label: "Contact",

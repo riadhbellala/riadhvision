@@ -105,7 +105,7 @@ function Detail({ service, icon, compact = false }) {
           return (
             <li
               key={item.title}
-              className="rounded-[18px] bg-ink/40 border border-snow/10 p-4"
+              className="rounded-[16px] bg-ink/40 border border-snow/10 p-4"
             >
               <p className="text-body text-snow">{item.title}</p>
               <p className="text-small text-ice mt-1">
@@ -154,7 +154,7 @@ function Services() {
                   onClick={() => setActive(i)}
                   onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
                   aria-expanded={on}
-                  className={`w-full flex items-center gap-4 rounded-[20px] px-4 py-3 text-left transition-colors duration-200 ${
+                  className={`w-full flex items-center gap-4 rounded-[16px] px-4 py-3 text-left transition-colors duration-200 ${
                     on
                       ? "bg-snow/12 border border-snow/25"
                       : "border border-transparent hover:bg-snow/6"

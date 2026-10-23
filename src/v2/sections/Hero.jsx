@@ -3,7 +3,6 @@ import gsap from "gsap";
 
 
 const OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
-const IN_OUT = "cubic-bezier(0.77, 0, 0.175, 1)";
 import { useLenis } from "lenis/react";
 import OrbButton from "../components/OrbButton";
 import { Folder } from "../../components/ui/folder";
@@ -19,10 +18,6 @@ const FOLDER = ["yashome", "batioil", "hydrame"]
   .filter(Boolean)
   .map((p) => ({ key: p.slug, title: p.name.split(" — ")[0], image: cover(p), href: siteOf(p) }));
 
-const CONTACT = [
-  { label: "riadh5726@gmail.com", short: "Email", href: "mailto:riadh5726@gmail.com" },
-  { label: "WhatsApp +213 555 71 10 88", short: "WhatsApp", href: "https://wa.me/213555711088" },
-];
 
 // The glass sheet (tinted, no live backdrop blur: the background behind is
 // already soft, and blurring it every scroll frame was the heaviest cost): a bright top edge, a soft ink floor so the bottom
@@ -48,30 +43,22 @@ function Hero() {
   const wide = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
   const rootRef = useRef(null);
 
-  // Entrance (GSAP), "vision" coming into focus: the hello line wipes in as the
-  // logo turns into place; the headline's lines come into focus one after the other
-  // (blur to sharp); the line under it rises; the CTA's glass orb rolls in from
-  // the far end to its rest; the folder fades up closed, and once everything is in, its projects fan out; the
-  // contact row follows. Strong ease-out, no layout properties animated.
+  // Entrance (GSAP), one language for every part on desktop and phones: the
+  // sheet fades in, then each block rises 24px and fades in, in reading order,
+  // 0.1s apart, with the same duration and ease. The headline types itself in
+  // (ScanLens) alongside. Transform and opacity only.
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
     const root = rootRef.current;
     const ctx = gsap.context(() => {
-      // The CTA that is showing (phones get the small one).
-      const cta = [...root.querySelectorAll("[data-cta] a")].find((a) => a.offsetWidth > 0);
-      const orb = cta?.querySelector("[data-orb]");
-      const roll = cta && orb ? cta.offsetWidth - orb.offsetWidth : 0;
-
       gsap
-        .timeline({ defaults: { ease: OUT } })
+        .timeline({ defaults: { ease: OUT, duration: 0.8 } })
         .from("[data-sheet]", { autoAlpha: 0, duration: 0.6, ease: "power1.out" })
-        .fromTo("[data-hello]", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: IN_OUT, clearProps: "clipPath" }, 0.15)
-        .from("[data-sub]", { autoAlpha: 0, y: 16, duration: 0.7 }, 0.85)
-        .from("[data-cta]", { autoAlpha: 0, duration: 0.4 }, 1)
-        .from(orb || [], { x: roll, rotate: 360, duration: 0.9, ease: IN_OUT, clearProps: "transform" }, 1)
-        .from(cta?.querySelector("[data-orb-label]") || [], { autoAlpha: 0, x: -10, duration: 0.5 }, 1.45)
-        .from("[data-lens]", { autoAlpha: 0, y: 30, duration: 0.9, clearProps: "transform" }, 0.9)
-        .from("[data-contact]", { autoAlpha: 0, y: 12, duration: 0.6 }, 1.3)
+        .from(
+          ["[data-hello]", "[data-sub]", "[data-cta]", "[data-contact]", "[data-lens]"],
+          { autoAlpha: 0, y: 24, stagger: 0.1, clearProps: "transform" },
+          0.2
+        );
     }, root);
     return () => {
       ctx.revert();
@@ -152,32 +139,17 @@ function Hero() {
             </div>
           </div>
 
-          {/* Phones: after the contact row, opening as it scrolls into view. */}
+          {/* Phones: after the contact row, peeking into the first screen and
+              opening as soon as it does, so the fanning projects invite the scroll. */}
           <div data-lens className="max-lg:order-2 max-lg:mt-4">
             {/* Selected work in a glass folder: the projects fan out of it. */}
-            <Folder items={FOLDER} label="Selected work" defaultOpen={wide} openOnView={!wide} openDelay={2300} className="lg:mt-16 lg:scale-[1.2] origin-bottom" />
+            <Folder items={FOLDER} label="Selected work" defaultOpen={wide} openOnView={!wide} openDelay={2300} viewThreshold={0.25} className="lg:mt-16 lg:scale-[1.2] origin-bottom max-lg:scale-[0.86] max-lg:origin-top max-lg:-mb-16" />
           </div>
         </div>
 
         {/* Contact. Phones: two glass pills and a line under them. */}
-        <div data-contact className="max-lg:order-1 relative mt-10 md:mt-14 flex flex-wrap items-center gap-2 md:gap-8 text-small text-ice">
-          <ul className="max-md:hidden contents">
-            {CONTACT.map(function renderContact(item) {
-              return (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="hover:text-snow transition-colors max-md:inline-flex max-md:rounded-pill max-md:border max-md:border-snow/20 max-md:bg-snow/8 max-md:px-4 max-md:py-2 max-md:text-snow max-md:active:scale-95"
-                    {...(item.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-                  >
-                    <span className="md:hidden">{item.short}</span>
-                    <span className="hidden md:inline">{item.label}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="max-md:basis-full max-md:mt-2">Based in Algeria. Working worldwide.</p>
+        <div data-contact className="max-lg:order-1 relative mt-10 md:mt-14 text-small text-ice">
+          <p>Based in Algeria. Working worldwide.</p>
         </div>
       </div>
     </section>

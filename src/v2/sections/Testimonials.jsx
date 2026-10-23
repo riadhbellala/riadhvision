@@ -107,10 +107,7 @@ function Testimonials() {
         <EmblemDrift src="/loop.webp" side="left" top="10%" opacity={0.55} imgClassName="max-md:top-[0%]! max-md:w-[40vw]! max-md:opacity-45!" />
       </div>
       <div>
-        <h3
-          className="text-snow font-light leading-none tracking-[-0.04em]"
-          style={{ fontSize: "clamp(2.25rem, 4.5vw, 4.5rem)" }}
-        >
+        <h3 className="text-subsection text-snow">
           In their words.
         </h3>
       </div>
@@ -204,7 +201,7 @@ function Testimonials() {
                 <a
                   {...(siteOf(project) ? { href: siteOf(project), ...EXTERNAL } : {})}
                   draggable="false"
-                  className="lg:col-span-5 group block rounded-[22px] border border-snow/20 bg-snow/8 p-2 transition-colors duration-200 hover:bg-snow/12"
+                  className="lg:col-span-5 group block rounded-[24px] border border-snow/20 bg-snow/8 p-2 transition-colors duration-200 hover:bg-snow/12"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden rounded-[16px] bg-ink-2">
                     <img

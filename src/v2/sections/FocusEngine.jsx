@@ -3,6 +3,7 @@ import { EXTERNAL, whatsapp } from "../components/links";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Section from "../components/Section";
+import OrbButton from "../components/OrbButton";
 import GlassIcon from "../components/GlassIcon";
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -189,13 +190,15 @@ function FocusEngine() {
                           );
                         })}
                       </ul>
-                      <a
+                      <OrbButton
                         href={whatsapp(`Hi Riadh, I'd like to build this: ${result.idea}`)}
                         {...EXTERNAL}
-                        className="mt-6 btn-primary"
+                        icon="paper-plane"
+                        size="sm"
+                        className="mt-6"
                       >
                         Start this project
-                      </a>
+                      </OrbButton>
                     </motion.div>
                   )}
                 </AnimatePresence>
